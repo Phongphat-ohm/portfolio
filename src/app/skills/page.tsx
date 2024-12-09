@@ -210,31 +210,31 @@ export default function Page() {
                         </h1>
                         <div className="grid grid-cols-6 gap-4">
                             <div className="card card-body bg-base-200 transition-all duration-200 hover:shadow">
-                                <img src="/images/library/next-js.png" alt="next js icon" />
+                                <img src="/images/library/next-js.png" alt="next js icon" className="transition-all duration-200 hover:scale-110" />
                             </div>
                             <div className="card card-body bg-base-200 transition-all duration-200 hover:shadow">
-                                <img src="/images/library/vite.png" alt="vite icon" />
+                                <img src="/images/library/vite.png" alt="vite icon" className="transition-all duration-200 hover:scale-110" />
                             </div>
                             <div className="card card-body bg-base-200 transition-all duration-200 hover:shadow">
-                                <img src="/images/library/express-js.png" alt="express icon" className="bg-white p-2 rounded-xl" />
+                                <img src="/images/library/express-js.png" alt="express icon" className="bg-white p-2 rounded-xl transition-all duration-200 hover:scale-110" />
                             </div>
                             <div className="card card-body bg-base-200 transition-all duration-200 hover:shadow">
-                                <img src="/images/library/socketjs.png" alt="socket js icon" className="bg-white p-2 rounded-full" />
+                                <img src="/images/library/socketjs.png" alt="socket js icon" className="bg-white p-2 rounded-full transition-all duration-200 hover:scale-110" />
                             </div>
                             <div className="card card-body bg-base-200 transition-all duration-200 hover:shadow">
-                                <img src="/images/library/prisma.png" alt="prisma icon" />
+                                <img src="/images/library/prisma.png" alt="prisma icon" className="transition-all duration-200 hover:scale-110" />
                             </div>
                             <div className="card card-body bg-base-200 transition-all duration-200 hover:shadow">
-                                <img src="/images/library/elysia.png" alt="elysia icon" />
+                                <img src="/images/library/elysia.png" alt="elysia icon" className="transition-all duration-200 hover:scale-110" />
+                            </div>
+                            <div className="card card-body bg-base-200 transition-all duration-200 hover:shadow flex h-auto justify-center items-center">
+                                <img src="/images/library/bootstrap.png" alt="bootstrap icon" className="transition-all duration-200 hover:scale-110" />
                             </div>
                             <div className="card card-body bg-base-200 transition-all duration-200 hover:shadow">
-                                <img src="/images/library/bootstrap.png" alt="bootstrap icon" />
+                                <img src="/images/library/nextui.png" alt="next ui icon" className="transition-all duration-200 hover:scale-110" />
                             </div>
                             <div className="card card-body bg-base-200 transition-all duration-200 hover:shadow">
-                                <img src="/images/library/nextui.png" alt="next ui icon" />
-                            </div>
-                            <div className="card card-body bg-base-200 transition-all duration-200 hover:shadow">
-                                <img src="/images/library/fontawesome.svg" alt="fontawesome icon" className="bg-white rounded-2xl" />
+                                <img src="/images/library/fontawesome.svg" alt="fontawesome icon" className="bg-white rounded-2xl transition-all duration-200 hover:scale-110" />
                             </div>
                         </div>
                     </div>

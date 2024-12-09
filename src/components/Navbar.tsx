@@ -29,10 +29,6 @@ export default function Navbar({ route_id, showScroll: showscroll }: Root) {
             href: "/projects"
         },
         {
-            label: "Certificate",
-            href: "/certificate"
-        },
-        {
             label: "Contact",
             href: "/contact"
         }
