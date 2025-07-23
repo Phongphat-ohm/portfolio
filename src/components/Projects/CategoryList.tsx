@@ -7,8 +7,8 @@ interface Root {
 
 }
 
-export default function CategoryList() {
-    const [isLoading, setLoading] = useState(true);
+export default function ProjectsList() {
+    const [isLoading, setLoading] = useState(false);
     const [projects, setProjects] = useState([
         {
             link: "https://github.com",

@@ -29,7 +29,7 @@ export default function Home() {
             </Link>
           </div>
         </motion.div>
-        <motion.img initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5 }} src="https://placehold.co/300x600" className="w-64" />
+        <motion.img initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5 }} src="/images/self-photo1.png" className="w-96" />
       </div>
     </>
   );

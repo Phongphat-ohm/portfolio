@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import CategoryList from "./CategoryList";
+import ProjectsList from "./CategoryList";
 
 export default function Project() {
     const [categories, setCategory] = useState([
@@ -62,7 +62,7 @@ export default function Project() {
                     ))}
                 </select>
             </div>
-            <CategoryList />
+            <ProjectsList />
         </>
     )
 }
