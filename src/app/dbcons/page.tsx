@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 
 export default function Home() {
@@ -20,22 +21,26 @@ export default function Home() {
     > = {
         mysql: {
             port: "3306",
-            template: "mysql://{{username}}:{{password}}@{{host}}:{{port}}/{{database}}{{ssl}}",
+            template:
+                "mysql://{{username}}:{{password}}@{{host}}:{{port}}/{{database}}{{ssl}}",
             envPrefix: "MYSQL",
         },
         postgresql: {
             port: "5432",
-            template: "postgresql://{{username}}:{{password}}@{{host}}:{{port}}/{{database}}{{ssl}}",
+            template:
+                "postgresql://{{username}}:{{password}}@{{host}}:{{port}}/{{database}}{{ssl}}",
             envPrefix: "POSTGRES",
         },
         mongodb: {
             port: "27017",
-            template: "mongodb://{{username}}:{{password}}@{{host}}:{{port}}/{{database}}{{ssl}}",
+            template:
+                "mongodb://{{username}}:{{password}}@{{host}}:{{port}}/{{database}}{{ssl}}",
             envPrefix: "MONGODB",
         },
         sqlserver: {
             port: "1433",
-            template: "sqlserver://{{username}}:{{password}}@{{host}}:{{port}};database={{database}}{{ssl}}",
+            template:
+                "sqlserver://{{username}}:{{password}}@{{host}}:{{port}};database={{database}}{{ssl}}",
             envPrefix: "SQLSERVER",
         },
     };
@@ -169,6 +174,7 @@ export default ${selectedDb === "mongodb"
                                     ข้อมูลการเชื่อมต่อ
                                 </h3>
 
+                                {/* Host */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
                                         Host/Server
@@ -177,10 +183,14 @@ export default ${selectedDb === "mongodb"
                                         type="text"
                                         value={host}
                                         onChange={(e) => setHost(e.target.value)}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg 
+                               text-gray-800 placeholder-gray-400
+                               focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        placeholder="localhost"
                                     />
                                 </div>
 
+                                {/* Port */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
                                         Port
@@ -189,10 +199,14 @@ export default ${selectedDb === "mongodb"
                                         type="text"
                                         value={port}
                                         onChange={(e) => setPort(e.target.value)}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg 
+                               text-gray-800 placeholder-gray-400
+                               focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        placeholder="3306"
                                     />
                                 </div>
 
+                                {/* Database */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
                                         Database Name
@@ -201,10 +215,14 @@ export default ${selectedDb === "mongodb"
                                         type="text"
                                         value={database}
                                         onChange={(e) => setDatabase(e.target.value)}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg 
+                               text-gray-800 placeholder-gray-400
+                               focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        placeholder="myapp"
                                     />
                                 </div>
 
+                                {/* Username */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
                                         Username
@@ -213,10 +231,14 @@ export default ${selectedDb === "mongodb"
                                         type="text"
                                         value={username}
                                         onChange={(e) => setUsername(e.target.value)}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg 
+                               text-gray-800 placeholder-gray-400
+                               focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        placeholder="root"
                                     />
                                 </div>
 
+                                {/* Password */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
                                         Password
@@ -225,10 +247,14 @@ export default ${selectedDb === "mongodb"
                                         type="password"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg 
+                               text-gray-800 placeholder-gray-400
+                               focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        placeholder="••••••••"
                                     />
                                 </div>
 
+                                {/* SSL */}
                                 <div className="flex items-center">
                                     <input
                                         type="checkbox"
@@ -255,7 +281,7 @@ export default ${selectedDb === "mongodb"
                                         </span>
                                         <button
                                             onClick={() => copyToClipboard(connectionString)}
-                                            className="bg-green-500 hover:bg-green-600 text-white text-sm px-3 py-1 rounded transition-all duration-200"
+                                            className="bg-green-500 hover:bg-green-600 text-white text-sm px-3 py-1 rounded transition-all duration-200 cursor-pointer"
                                         >
                                             📋 Copy
                                         </button>
@@ -263,7 +289,7 @@ export default ${selectedDb === "mongodb"
                                     <textarea
                                         readOnly
                                         value={connectionString}
-                                        className="w-full h-32 p-4 bg-white border border-gray-300 rounded-lg font-mono text-sm resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full h-32 p-4 bg-white border border-gray-300 rounded-lg font-mono text-sm resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800"
                                     />
                                 </div>
 
@@ -274,23 +300,14 @@ export default ${selectedDb === "mongodb"
                                     <textarea
                                         readOnly
                                         value={envVariables}
-                                        className="w-full h-24 p-4 bg-white border border-gray-300 rounded-lg font-mono text-sm resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full h-24 p-4 bg-white border border-gray-300 rounded-lg font-mono text-sm resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800"
                                     />
                                     <button
                                         onClick={() => copyToClipboard(envVariables)}
-                                        className="mt-2 bg-blue-500 hover:bg-blue-600 text-white text-sm px-3 py-1 rounded transition-all duration-200"
+                                        className="mt-2 bg-blue-500 hover:bg-blue-600 text-white text-sm px-3 py-1 rounded transition-all duration-200 cursor-pointer"
                                     >
                                         📋 Copy .env
                                     </button>
-                                </div>
-
-                                <div className="bg-green-50 rounded-lg p-6">
-                                    <h4 className="font-semibold text-gray-800 mb-3">
-                                        NextJS Usage Example
-                                    </h4>
-                                    <pre className="bg-white p-4 rounded border text-sm overflow-x-auto">
-                                        <code>{nextjsExample}</code>
-                                    </pre>
                                 </div>
                             </div>
                         </div>
