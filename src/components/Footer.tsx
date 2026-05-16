@@ -3,9 +3,9 @@ import { FaCopyright } from "react-icons/fa6";
 export default function Footer() {
     return (
         <>
-            <footer className="bg-base-300 txet-white flex gap-2 items-center justify-center p-10">
+            <footer className="flex flex-col items-center justify-center gap-2 bg-base-300 p-8 text-center text-sm text-base-content/70 sm:flex-row">
                 <FaCopyright />
-                Create By Ohm Phongphat Phesatcha
+                <span>Create By Ohm Phongphat Phesatcha</span>
             </footer>
         </>
     )

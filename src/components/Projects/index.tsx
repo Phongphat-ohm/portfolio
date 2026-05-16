@@ -4,7 +4,7 @@ import { useState } from "react";
 import ProjectsList from "./CategoryList";
 
 export default function Project() {
-    const [categories, setCategory] = useState([
+    const [categories] = useState([
         {
             label: "Web Project",
             value: "web"
@@ -53,9 +53,9 @@ export default function Project() {
 
     return (
         <>
-            <div className="flex flex-col">
-                <label className="text-lg">Select project category</label>
-                <select className="select select-bordered w-full max-w-xs">
+            <div className="flex flex-col gap-2 sm:max-w-xs">
+                <label className="text-lg font-semibold">Select project category</label>
+                <select className="select select-bordered w-full">
                     <option value={"all"}>All Project</option>
                     {categories.map((val, index) => (
                         <option value={val.value} key={index}>{val.label}</option>

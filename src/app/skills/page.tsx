@@ -1,246 +1,233 @@
-"use client"
-import { motion } from "framer-motion";
-import Navbar from "@/components/Navbar";
-import { FaComputerMouse, FaHtml5 } from "react-icons/fa6";
-import Link from "next/link";
+"use client";
+
 import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { FaComputerMouse } from "react-icons/fa6";
+
+const programSkills = [
+  {
+    name: "Visual Studio Code",
+    image: "/images/program/vscode.png",
+    href: "https://code.visualstudio.com/",
+    description:
+      "A lightweight editor for daily web development, extensions, debugging, and Git workflows.",
+  },
+  {
+    name: "Visual Studio",
+    image: "/images/program/Visual_Studio_Icon_2022.png",
+    href: "https://visualstudio.microsoft.com/",
+    description:
+      "An IDE for larger .NET, C#, desktop, and service-based application development.",
+  },
+  {
+    name: "Unity",
+    image: "/images/program/unity.png",
+    href: "https://unity.com/",
+    description:
+      "A game and interactive 3D platform for building 2D, 3D, AR, and VR experiences.",
+  },
+  {
+    name: "Microsoft 365",
+    image: "/images/program/Microsoft_365.png",
+    href: "https://www.microsoft.com/th-th/microsoft-365/microsoft-office",
+    description:
+      "Productivity tools for documents, spreadsheets, presentations, communication, and planning.",
+  },
+];
+
+const languageSkills = [
+  ["HTML5", "/images/language/html5.png"],
+  ["CSS", "/images/language/css.png"],
+  ["JavaScript", "/images/language/javascript.png"],
+  ["PHP", "/images/language/php.png"],
+  ["MySQL", "/images/language/mysql.png"],
+  ["C#", "/images/language/csharp.png"],
+  ["Python", "/images/language/python.png"],
+  ["Google Apps Script", "/images/language/google_script.png"],
+];
+
+const runtimeSkills = [
+  {
+    name: "Node.js Runtime",
+    image: "/images/runtime/jsIconGreen.svg",
+    description: "Runtime for server-side JavaScript APIs, tools, and services.",
+  },
+  {
+    name: "Bun Runtime",
+    image: "/images/runtime/bun.svg",
+    description: "Fast JavaScript runtime and package manager for modern projects.",
+  },
+  {
+    name: ".NET Runtime",
+    image: "/images/runtime/dotnet.png",
+    description: "Runtime for C# and .NET applications, services, and tools.",
+  },
+  {
+    name: "Apache Runtime",
+    image: "/images/runtime/apache.png",
+    description: "Web server runtime for hosting websites and backend applications.",
+  },
+];
+
+const libraries = [
+  ["Next.js", "/images/library/next-js.png"],
+  ["Vite", "/images/library/vite.png", ""],
+  ["Express", "/images/library/express-js.png", "bg-white p-2"],
+  ["Socket.IO", "/images/library/socketjs.png", "bg-white p-2 rounded-full"],
+  ["Prisma", "/images/library/prisma.png", ""],
+  ["Elysia", "/images/library/elysia.png", ""],
+  ["Bootstrap", "/images/library/bootstrap.png", ""],
+  ["NextUI", "/images/library/nextui.png", ""],
+  ["Font Awesome", "/images/library/fontawesome.svg", "bg-white p-2"],
+];
 
 export default function Page() {
-    return (
-        <>
-            <Navbar route_id={1} showScroll />
-            <main>
-                <div className="h-screen flex items-center justify-around text-white relative">
-                    <div className="flex flex-col items-center">
-                        <motion.img initial={{ opacity: 0, rotate: 90 }} animate={{ opacity: 1, rotate: 0 }} transition={{ duration: 0.5 }} src="images/competence.png" alt="" className="w-96" />
-                        <motion.h2 initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ duration: 0.5 }} className="text-2xl mt-5">
-                            This is the skill of <label className="text-cyan-400 font-bold nunito">Ohm Phongphat</label>
-                        </motion.h2>
-                        <motion.label initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ duration: 0.5 }}>Scroll down to view my skills</motion.label>
-                    </div>
+  return (
+    <>
+      <Navbar route_id={1} showScroll />
+      <main className="bg-base-100 text-base-content">
+        <section className="relative mx-auto flex min-h-screen w-full max-w-7xl items-center justify-center px-4 pb-20 pt-28 sm:px-6 lg:px-8">
+          <div className="grid w-full items-center gap-10 lg:grid-cols-2">
+            <motion.img
+              initial={{ opacity: 0, rotate: 8, scale: 0.96 }}
+              animate={{ opacity: 1, rotate: 0, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              src="/images/competence.png"
+              alt="Skill illustration"
+              className="mx-auto w-full max-w-xs sm:max-w-sm lg:max-w-md"
+            />
+            <div className="text-center lg:text-left">
+              <motion.p
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="text-sm font-semibold uppercase text-primary"
+              >
+                Skills
+              </motion.p>
+              <motion.h1
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="mt-3 text-3xl font-bold nunito sm:text-5xl"
+              >
+                Tools and technologies I use to build practical software.
+              </motion.h1>
+              <motion.p
+                initial={{ x: 20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="mt-5 text-base leading-8 text-base-content/70"
+              >
+                A compact overview of my editor, language, runtime, framework,
+                and library experience.
+              </motion.p>
+            </div>
+          </div>
 
-                    <motion.span
-                        className="w-full absolute bottom-10 left-0 flex justify-center text-lg"
-                        animate={{
-                            y: [0, -10, 0], // ขยับขึ้น -10px แล้วกลับลงมา
-                        }}
-                        transition={{
-                            duration: 1.5, // ระยะเวลาหนึ่งรอบ (ขึ้น-ลง)
-                            repeat: Infinity, // ทำซ้ำไม่สิ้นสุด
-                        }}
-                    >
-                        <FaComputerMouse className="rotate-180 text-2xl" />
-                    </motion.span>
+          <motion.span
+            className="absolute bottom-8 left-0 flex w-full justify-center text-lg"
+            animate={{ y: [0, -10, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          >
+            <FaComputerMouse className="rotate-180 text-2xl text-primary" />
+          </motion.span>
+        </section>
+
+        <section className="bg-base-200">
+          <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+            <SectionTitle title="Program Skill" />
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              {programSkills.map((skill) => (
+                <Link
+                  key={skill.name}
+                  href={skill.href}
+                  target="_blank"
+                  className="card h-full bg-base-100 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+                >
+                  <div className="card-body items-center text-center">
+                    <img src={skill.image} alt={skill.name} className="h-24 w-24 object-contain" />
+                    <h2 className="card-title text-lg">{skill.name}</h2>
+                    <p className="text-sm leading-6 text-base-content/70">
+                      {skill.description}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+            <SectionTitle title="Language Skills" />
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+              {languageSkills.map(([name, image]) => (
+                <div key={name} className="card bg-base-200 shadow-sm">
+                  <div className="card-body items-center justify-center p-5">
+                    <img src={image} alt={`${name} icon`} className="h-20 w-20 object-contain" />
+                    <span className="text-center text-sm font-medium">{name}</span>
+                  </div>
                 </div>
-                <div className="bg-base-200">
-                    <div className="container mx-auto px-36 p-10">
-                        <h1 className="text-lg mb-5">
-                            Program Skill
-                        </h1>
-                        <div className="grid grid-cols-4 gap-3">
-                            <div>
-                                <Link href={"https://code.visualstudio.com/"} target="_blank" className="card bg-base-100 shadow transition-all duration-200 hover:shadow-xl">
-                                    <div className="card-body flex flex-col items-center justify-center">
-                                        <img src="/images/program/vscode.png" alt="program vs code" className="w-1/2" />
-                                        <h1 className="text-xl">
-                                            Visual Studio Code
-                                        </h1>
-                                        <label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Visual Studio Code เป็นโปรแกรมแก้ไขโค้ดฟรีที่พัฒนาโดย Microsoft รองรับหลายภาษาโปรแกรมและมีฟีเจอร์เด่น ใช้งานได้บนทุกแพลตฟอร์ม เหมาะสำหรับนักพัฒนาทุกระดับ!
-                                        </label>
-                                    </div>
-                                </Link>
-                            </div>
-                            <div>
-                                <Link href={"https://visualstudio.microsoft.com/"} target="_blank" className="card bg-base-100 shadow transition-all duration-200 hover:shadow-xl">
-                                    <div className="card-body flex flex-col items-center justify-center">
-                                        <img src="/images/program/Visual_Studio_Icon_2022.png" alt="program vs code" className="w-1/2" />
-                                        <h1 className="text-xl">
-                                            Visual Studio
-                                        </h1>
-                                        <label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Visual Studio คือ IDE จาก Microsoft สำหรับพัฒนาโปรแกรมในหลายภาษา เช่น C# และ C++, เหมาะสำหรับโปรเจกต์ขนาดใหญ่และแอปพลิเคชันที่ซับซ้อน.
-                                        </label>
-                                    </div>
-                                </Link>
-                            </div>
-                            <div>
-                                <Link href={"https://unity.com/"} target="_blank" className="card bg-base-100 shadow transition-all duration-200 hover:shadow-xl">
-                                    <div className="card-body flex flex-col items-center justify-center">
-                                        <img src="/images/program/unity.png" alt="program vs code" className="w-1/2" />
-                                        <h1 className="text-xl">
-                                            Unity
-                                        </h1>
-                                        <label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Unity คือแพลตฟอร์มพัฒนาเกมและแอปพลิเคชัน 3D และ 2D ที่ใช้ในการสร้างเกมและสื่ออินเตอร์แอคทีฟ รองรับหลายแพลตฟอร์ม เช่น PC, คอนโซล, โมบาย และ VR/AR.
-                                        </label>
-                                    </div>
-                                </Link>
-                            </div>
-                            <div>
-                                <Link href={"https://www.microsoft.com/th-th/microsoft-365/microsoft-office"} target="_blank" className="card bg-base-100 shadow transition-all duration-200 hover:shadow-xl">
-                                    <div className="card-body flex flex-col items-center justify-center">
-                                        <img src="/images/program/Microsoft_365.png" alt="program vs code" className="w-1/2" />
-                                        <h1 className="text-xl">
-                                            Microsoft office
-                                        </h1>
-                                        <label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Microsoft Office คือชุดโปรแกรมสำหรับการทำงานเอกสารที่รวมถึง Word, Excel, PowerPoint, Outlook และอื่น ๆ ที่ใช้ในการสร้างและจัดการเอกสาร, สเปรดชีต, งานนำเสนอ, และการสื่อสาร.
-                                        </label>
-                                    </div>
-                                </Link>
-                            </div>
-                        </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-base-200">
+          <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+            <SectionTitle title="Runtime Skills" />
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              {runtimeSkills.map((skill) => (
+                <div key={skill.name} className="card bg-base-100 shadow-sm transition hover:shadow-xl">
+                  <div className="card-body">
+                    <div className="flex items-center gap-4">
+                      <img src={skill.image} alt={skill.name} className="h-16 w-16 object-contain" />
+                      <div>
+                        <h2 className="font-semibold">{skill.name}</h2>
+                        <p className="mt-1 text-sm leading-6 text-base-content/70">
+                          {skill.description}
+                        </p>
+                      </div>
                     </div>
+                  </div>
                 </div>
-                <div className="bg-base-100">
-                    <div className="container mx-auto px-36 p-10">
-                        <h1 className="text-lg mb-5">
-                            Language Skills
-                        </h1>
-                        <div className="grid grid-cols-5 gap-5 w-full">
-                            <div className="card bg-base-200 transition-all duration-200">
-                                <div className="card-body">
-                                    <img src="images/language/html5.png" alt="html icon" />
-                                </div>
-                            </div>
-                            <div className="card bg-base-200 transition-all duration-200">
-                                <div className="card-body">
-                                    <img src="images/language/css.png" alt="css icon" />
-                                </div>
-                            </div>
-                            <div className="card bg-base-200 transition-all duration-200">
-                                <div className="card-body">
-                                    <img src="images/language/javascript.png" alt="javascript icon" />
-                                </div>
-                            </div>
-                            <div className="card bg-base-200 transition-all duration-200">
-                                <div className="card-body">
-                                    <img src="images/language/php.png" alt="php icon" />
-                                </div>
-                            </div>
-                            <div className="card bg-base-200 transition-all duration-200">
-                                <div className="card-body flex items-center justify-center">
-                                    <img src="images/language/mysql.png" alt="mysql icon" />
-                                </div>
-                            </div>
-                            <div className="card bg-base-200 transition-all duration-200">
-                                <div className="card-body">
-                                    <img src="images/language/csharp.png" alt="csharp icon" />
-                                </div>
-                            </div>
-                            <div className="card bg-base-200 transition-all duration-200">
-                                <div className="card-body">
-                                    <img src="images/language/python.png" alt="python icon" />
-                                </div>
-                            </div>
-                            <div className="card bg-base-200 transition-all duration-200">
-                                <div className="card-body">
-                                    <img src="images/language/google_script.png" alt="google script icon" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+            <SectionTitle title="Frameworks and Libraries" />
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+              {libraries.map(([name, image, imageClass]) => (
+                <div key={name} className="card bg-base-200 shadow-sm">
+                  <div className="card-body items-center justify-center p-5">
+                    <img
+                      src={image}
+                      alt={`${name} icon`}
+                      className={`h-20 w-20 rounded-lg object-contain transition hover:scale-105 ${imageClass}`}
+                    />
+                    <span className="text-center text-sm font-medium">{name}</span>
+                  </div>
                 </div>
-                <div className="bg-base-200">
-                    <div className="container mx-auto px-36 p-10">
-                        <h1 className="text-lg mb-5">
-                            Runtime Skills
-                        </h1>
-                        <div className="grid grid-cols-3 gap-4 text-white">
-                            <div>
-                                <div className="card bg-base-100 transition-all duration-200 hover:shadow-xl">
-                                    <div className="card-body">
-                                        <div className="flex gap-5">
-                                            <img src="/images/runtime/jsIconGreen.svg" alt="node js" className="w-1/4" />
-                                            <div className="flex flex-col justify-center">
-                                                <h1 className="text-xl">NodeJS Runtime</h1>
-                                                <label>Node.js คือสภาพแวดล้อมที่ใช้ในการรัน JavaScript บนเซิร์ฟเวอร์</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <div className="card bg-base-100 transition-all duration-200 hover:shadow-xl">
-                                    <div className="card-body">
-                                        <div className="flex gap-5">
-                                            <img src="/images/runtime/bun.svg" alt="node js" className="w-1/4" />
-                                            <div className="flex flex-col justify-center">
-                                                <h1 className="text-xl">BunJS Runtime</h1>
-                                                <label>Bun.js คือสภาพแวดล้อมที่ใช้ในการรัน JavaScript บนเซิร์ฟเวอร์</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <div className="card bg-base-100 transition-all duration-200 hover:shadow-xl">
-                                    <div className="card-body">
-                                        <div className="flex gap-5">
-                                            <img src="/images/runtime/dotnet.png" alt="node js" className="w-1/4" />
-                                            <div className="flex flex-col justify-center">
-                                                <h1 className="text-xl">DotNet Runtime</h1>
-                                                <label>คือสภาพแวดล้อมที่รันแอปพลิเคชัน .NET และจัดการการทำงานต่าง ๆ</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <div className="card bg-base-100 transition-all duration-200 hover:shadow-xl">
-                                    <div className="card-body">
-                                        <div className="flex gap-10">
-                                            <img src="/images/runtime/apache.png" alt="node js" className="w-1/12" />
-                                            <div className="flex flex-col justify-center">
-                                                <h1 className="text-xl">Apache Runtime</h1>
-                                                <label>คือสภาพแวดล้อมที่ใช้รัน Apache HTTP Server ซึ่งเป็นเว็บเซิร์ฟเวอร์ที่ช่วยให้สามารถโฮสต์เว็บไซต์และแอปพลิเคชันได้.</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="bg-base-100">
-                    <div className="container mx-auto px-36 p-10">
-                        <h1 className="text-lg mb-5">
-                            Any Skills
-                        </h1>
-                        <div className="grid grid-cols-6 gap-4">
-                            <div className="card card-body bg-base-200 transition-all duration-200 hover:shadow">
-                                <img src="/images/library/next-js.png" alt="next js icon" className="transition-all duration-200 hover:scale-110" />
-                            </div>
-                            <div className="card card-body bg-base-200 transition-all duration-200 hover:shadow">
-                                <img src="/images/library/vite.png" alt="vite icon" className="transition-all duration-200 hover:scale-110" />
-                            </div>
-                            <div className="card card-body bg-base-200 transition-all duration-200 hover:shadow">
-                                <img src="/images/library/express-js.png" alt="express icon" className="bg-white p-2 rounded-xl transition-all duration-200 hover:scale-110" />
-                            </div>
-                            <div className="card card-body bg-base-200 transition-all duration-200 hover:shadow">
-                                <img src="/images/library/socketjs.png" alt="socket js icon" className="bg-white p-2 rounded-full transition-all duration-200 hover:scale-110" />
-                            </div>
-                            <div className="card card-body bg-base-200 transition-all duration-200 hover:shadow">
-                                <img src="/images/library/prisma.png" alt="prisma icon" className="transition-all duration-200 hover:scale-110" />
-                            </div>
-                            <div className="card card-body bg-base-200 transition-all duration-200 hover:shadow">
-                                <img src="/images/library/elysia.png" alt="elysia icon" className="transition-all duration-200 hover:scale-110" />
-                            </div>
-                            <div className="card card-body bg-base-200 transition-all duration-200 hover:shadow flex h-auto justify-center items-center">
-                                <img src="/images/library/bootstrap.png" alt="bootstrap icon" className="transition-all duration-200 hover:scale-110" />
-                            </div>
-                            <div className="card card-body bg-base-200 transition-all duration-200 hover:shadow">
-                                <img src="/images/library/nextui.png" alt="next ui icon" className="transition-all duration-200 hover:scale-110" />
-                            </div>
-                            <div className="card card-body bg-base-200 transition-all duration-200 hover:shadow">
-                                <img src="/images/library/fontawesome.svg" alt="fontawesome icon" className="bg-white rounded-2xl transition-all duration-200 hover:scale-110" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <Footer />
-            </main>
-        </>
-    )
+              ))}
+            </div>
+          </div>
+        </section>
+        <Footer />
+      </main>
+    </>
+  );
+}
+
+function SectionTitle({ title }: { title: string }) {
+  return (
+    <h2 className="mb-5 text-xl font-bold text-base-content sm:text-2xl">
+      {title}
+    </h2>
+  );
 }
