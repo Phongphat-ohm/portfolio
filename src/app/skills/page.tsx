@@ -6,6 +6,11 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { FaComputerMouse } from "react-icons/fa6";
 
+const operatingSystemSkills = [
+  ["Windows", "/images/os/windows.webp"],
+  ["Linux Ubuntu", "/images/os/ubuntu.webp"]
+];
+
 const programSkills = [
   {
     name: "Visual Studio Code",
@@ -42,10 +47,23 @@ const languageSkills = [
   ["CSS", "/images/language/css.png"],
   ["JavaScript", "/images/language/javascript.png"],
   ["PHP", "/images/language/php.png"],
-  ["MySQL", "/images/language/mysql.png"],
+  ["SQL", "/images/language/sqlscript.png"],
   ["C#", "/images/language/csharp.png"],
   ["Python", "/images/language/python.png"],
   ["Google Apps Script", "/images/language/google_script.png"],
+];
+
+const databaseSkill = [
+  {
+    name: "MySQL",
+    image: "/images/database/mysql.png",
+    description: "Relational database management system for structured data storage.",
+  },
+  {
+    name: "PostgreSQL",
+    image: "/images/database/postgresql.webp",
+    description: "Open-source relational database management system for structured data storage.",
+  }
 ];
 
 const runtimeSkills = [
@@ -79,7 +97,7 @@ const libraries = [
   ["Prisma", "/images/library/prisma.png", ""],
   ["Elysia", "/images/library/elysia.png", ""],
   ["Bootstrap", "/images/library/bootstrap.png", ""],
-  ["NextUI", "/images/library/nextui.png", ""],
+  ["HeroUI", "/images/library/heroui.png", ""],
   ["Font Awesome", "/images/library/fontawesome.svg", "bg-white p-2"],
 ];
 
@@ -162,13 +180,54 @@ export default function Page() {
 
         <section>
           <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-            <SectionTitle title="Language Skills" />
+            <SectionTitle title="Operating System Skills" />
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
-              {languageSkills.map(([name, image]) => (
+              {operatingSystemSkills.map(([name, image]) => (
                 <div key={name} className="card bg-base-200 shadow-sm">
                   <div className="card-body items-center justify-center p-5">
                     <img src={image} alt={`${name} icon`} className="h-20 w-20 object-contain" />
                     <span className="text-center text-sm font-medium">{name}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-base-200">
+          <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+            <SectionTitle title="Language Skills" />
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+              {languageSkills.map(([name, image]) => (
+                <div key={name} className="card bg-base-100 shadow-sm">
+                  <div className="card-body items-center justify-center p-5">
+                    <img src={image} alt={`${name} icon`} className="h-20 w-20 object-contain" />
+                    <span className="text-center text-sm font-medium">{name}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+            <SectionTitle title="Database Skills" />
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              {databaseSkill.map((skill) => (
+                <div key={skill.name}>
+                  <div className="card bg-base-200 shadow-sm transition hover:shadow-xl">
+                    <div className="card-body">
+                      <div className="flex flex-col items-center gap-4">
+                        <img src={skill.image} alt={skill.name} className="size-28 object-contain" />
+                        <div>
+                          <h2 className="font-semibold">{skill.name}</h2>
+                          <p className="mt-1 text-sm leading-6 text-base-content/70">
+                            {skill.description}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               ))}
