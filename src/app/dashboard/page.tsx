@@ -19,11 +19,21 @@ export default function DashboardPage() {
     const [checking, setChecking] = useState(true);
 
     useEffect(() => {
-        fetch("/api/auth/me")
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 10_000);
+        fetch("/api/auth/me", { signal: controller.signal })
             .then((res) => {
                 if (res.ok) router.replace("/dashboard/home");
             })
-            .finally(() => setChecking(false));
+            .catch(() => {})
+            .finally(() => {
+                clearTimeout(timeout);
+                setChecking(false);
+            });
+        return () => {
+            clearTimeout(timeout);
+            controller.abort();
+        };
     }, [router]);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -31,6 +41,8 @@ export default function DashboardPage() {
         const formData = new FormData(event.currentTarget);
         setError("");
         setLoading(true);
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 15_000);
         try {
             const res = await fetch("/api/auth/login", {
                 method: "POST",
@@ -39,17 +51,24 @@ export default function DashboardPage() {
                     username: formData.get("username"),
                     password: formData.get("password"),
                 }),
+                signal: controller.signal,
             });
+            clearTimeout(timeout);
             const data = await res.json().catch(() => null);
             if (!res.ok) {
-                setError(data?.error ?? "Login failed");
+                setError(data?.error ?? "เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบข้อมูล");
                 return;
             }
             router.replace("/dashboard/home");
             router.refresh();
-        } catch {
-            setError("Something went wrong, please try again");
+        } catch (error) {
+            setError(
+                (error as Error)?.name === "AbortError"
+                    ? "ระบบใช้เวลาตอบสนองนานเกินไป (ฐานข้อมูลอาจไม่สามารถเชื่อมต่อได้) กรุณาลองใหม่อีกครั้ง"
+                    : "การเชื่อมต่อขัดข้อง กรุณาลองใหม่"
+            );
         } finally {
+            clearTimeout(timeout);
             setLoading(false);
         }
     };

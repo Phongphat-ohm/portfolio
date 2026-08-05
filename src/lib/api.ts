@@ -4,6 +4,15 @@ export function apiError(message: string, status = 400) {
   return NextResponse.json({ error: message }, { status });
 }
 
+export function apiErrorFrom(
+  error: unknown,
+  message = "Internal server error",
+  status = 500
+) {
+  console.error(`[api] ${message}`, error);
+  return apiError(message, status);
+}
+
 export function requiredString(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
 }

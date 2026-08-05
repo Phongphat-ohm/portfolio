@@ -25,7 +25,10 @@ export async function POST(request: NextRequest) {
   }
 
   const buffer = Buffer.from(await file.arrayBuffer());
-  const filename = await saveImage(buffer, file.type).catch(() => null);
+  const filename = await saveImage(buffer, file.type).catch((error) => {
+    console.error("[api][uploads] failed to save file:", error);
+    return null;
+  });
   if (!filename) {
     return apiError("Failed to save file", 500);
   }
