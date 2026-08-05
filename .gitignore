@@ -17,6 +17,12 @@
 /.next/
 /out/
 
+# generated prisma client
+/src/generated/
+
+# local file uploads
+/data/
+
 # production
 /build
 

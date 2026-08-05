@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>แผนระบบ Admin &amp; Upload — Portfolio</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/daisyui@5/index.js" type="module"></script>
+    <style>
+        pre {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        }
+    </style>
+</head>
+<body class="bg-base-100 text-base-content">
+    <header class="border-b border-white/10 bg-base-200/70 backdrop-blur-xl sticky top-0 z-50">
+        <div class="mx-auto max-w-6xl px-4 py-4 sm:px-6">
+            <div class="flex items-center justify-between gap-4">
+                <div>
+                    <h1 class="text-xl font-bold sm:text-2xl">Portfolio. — แผนระบบ Admin &amp; Upload</h1>
+                    <p class="text-sm text-base-content/60">Next.js + Prisma + PostgreSQL + MinIO</p>
+                </div>
+                <span class="badge badge-primary hidden sm:inline-flex">PLAN v1.0</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="mx-auto max-w-6xl space-y-10 px-4 py-10 sm:px-6">
+        <nav class="flex flex-wrap gap-2">
+            <a href="#overview" class="btn btn-xs btn-ghost border border-base-content/10">ภาพรวม</a>
+            <a href="#stack" class="btn btn-xs btn-ghost border border-base-content/10">Tech Stack</a>
+            <a href="#arch" class="btn btn-xs btn-ghost border border-base-content/10">สถาปัตยกรรม</a>
+            <a href="#files" class="btn btn-xs btn-ghost border border-base-content/10">โครงสร้างไฟล์</a>
+            <a href="#schema" class="btn btn-xs btn-ghost border border-base-content/10">Database Schema</a>
+            <a href="#api" class="btn btn-xs btn-ghost border border-base-content/10">API Routes</a>
+            <a href="#auth" class="btn btn-xs btn-ghost border border-base-content/10">Auth &amp; Middleware</a>
+            <a href="#storage" class="btn btn-xs btn-ghost border border-base-content/10">Local Storage</a>
+            <a href="#env" class="btn btn-xs btn-ghost border border-base-content/10">Env Variables</a>
+            <a href="#security" class="btn btn-xs btn-ghost border border-base-content/10">Security</a>
+            <a href="#steps" class="btn btn-xs btn-ghost border border-base-content/10">ขั้นตอน Build</a>
+        </nav>
+
+        <!-- ============ OVERVIEW ============ -->
+        <section id="overview" class="card bg-base-200 shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title text-2xl">1. ภาพรวม</h2>
+                <p class="text-base-content/80 leading-7">
+                    เพิ่มระบบบริหารจัดการข้อมูลในโปรเจกต์ Portfolio เพื่อให้แอดมินสามารถ
+                    <strong>เพิ่ม / แก้ไข / ลบโปรเจกต์</strong> ได้เองผ่านหน้าเว็บ พร้อมระบบ
+                    <strong>เข้าสู่ระบบที่ปลอดภัย</strong> (Password hashing + JWT + Middleware)
+                    และเชื่อมข้อมูลจากหน้า <code class="bg-base-300 px-1 rounded">/projects</code>
+                    ให้ดึงข้อมูลจากฐานข้อมูลผ่าน API แทนข้อมูลแบบ hardcode
+                </p>
+                <div class="grid gap-3 sm:grid-cols-3 mt-2">
+                    <div class="card bg-base-100 shadow-sm">
+                        <div class="card-body p-4">
+                            <h3 class="font-bold">ฐานข้อมูล</h3>
+                            <p class="text-sm text-base-content/70">PostgreSQL (database server ของตัวเอง) + Prisma ORM</p>
+                        </div>
+                    </div>
+                    <div class="card bg-base-100 shadow-sm">
+                        <div class="card-body p-4">
+                            <h3 class="font-bold">ระบบ Auth</h3>
+                            <p class="text-sm text-base-content/70">bcryptjs hash + JWT (httpOnly cookie) + Middleware ป้องกัน</p>
+                        </div>
+                    </div>
+                    <div class="card bg-base-100 shadow-sm">
+                        <div class="card-body p-4">
+                            <h3 class="font-bold">อัปโหลดรูป</h3>
+                            <p class="text-sm text-base-content/70">MinIO (server แยก) + Presigned URL upload ตรงจาก browser</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ TECH STACK ============ -->
+        <section id="stack" class="card bg-base-200 shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title text-2xl">2. Tech Stack</h2>
+                <div class="overflow-x-auto">
+                    <table class="table table-zebra table-sm">
+                        <thead>
+                            <tr>
+                                <th>ส่วน</th>
+                                <th>เทคโนโลยี</th>
+                                <th>เหตุผล</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="font-semibold">Framework</td>
+                                <td><code>Next.js 16 (App Router) + React 19 + TypeScript</code></td>
+                                <td class="text-sm text-base-content/70">โครงสร้างเดิมของโปรเจกต์</td>
+                            </tr>
+                            <tr>
+                                <td class="font-semibold">ORM / Database</td>
+                                <td><code>Prisma + PostgreSQL</code></td>
+                                <td class="text-sm text-base-content/70">Type-safe schema, migration, ใช้ DB server ของตัวเอง</td>
+                            </tr>
+                            <tr>
+                                <td class="font-semibold">Auth</td>
+                                <td><code>bcryptjs</code> + <code>jose</code> (JWT)</td>
+                                <td class="text-sm text-base-content/70">bcryptjs ทำงานได้ทุกแพลตฟอร์ม ไม่ต้อง compile native, jose ใช้ใน Edge middleware ได้</td>
+                            </tr>
+                            <tr>
+                                <td class="font-semibold">Storage</td>
+                                <td><code>Local disk</code> (<code>data/uploads/</code>) + serve ผ่าน API route</td>
+                                <td class="text-sm text-base-content/70">ไม่ต้องพึ่ง object storage / CORS / external URL — ไฟล์อยู่บน server เดียวกับแอป</td>
+                            </tr>
+                            <tr>
+                                <td class="font-semibold">UI</td>
+                                <td><code>Tailwind CSS 4</code> + <code>daisyUI 5</code> + <code>framer-motion</code></td>
+                                <td class="text-sm text-base-content/70">ชุด UI เดิมของโปรเจกต์</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ ARCHITECTURE ============ -->
+        <section id="arch" class="card bg-base-200 shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title text-2xl">3. สถาปัตยกรรม</h2>
+
+                <h3 class="text-lg font-bold mt-4">3.1 ภาพรวมระบบ</h3>
+<pre class="bg-base-300 p-4 rounded-box overflow-x-auto text-sm leading-6">┌──────────────────────────┐         ┌──────────────────────────┐
+│  Browser (Client)        │         │  Next.js App             │
+│  ┌────────────────────┐  │  HTTP   │  ┌────────────────────┐  │
+│  │ /projects          │──┼────────▶│  │ GET /api/projects  │  │
+│  │ /dashboard (login) │  │         │  └─────────┬──────────┘  │
+│  │ /dashboard/home    │  │         │            │ Prisma       │
+│  │ Admin form + upload│  │         │  ┌─────────▼──────────┐  │
+│  └────────────────────┘  │         │  │ /api/admin/projects│  │
+│          │               │         │  │ /api/auth/*        │  │
+│          │ upload ผ่าน    │         │  │ /api/uploads       │  │
+│          │ FormData (POST)│         │  └─────────┬──────────┘  │
+└──────────┼───────────────┘         └──┬──────┬───┴──────┬─────┘
+           │                            │      │          │
+           ▼                            ▼      ▼          ▼
+   ┌──────────────────┐         ┌──────────┐ ┌─────────┐ ┌──────────┐
+   │   /api/uploads   │         │   DB     │ │ Middle- │ │  disk    │
+   │  (GET รูปสาธารณะ) │         │ PostgreSQL│ │ ware JWT │ │ data/uploads│
+   └──────────────────┘         └──────────┘ └─────────┘ └──────────┘</pre>
+
+                <h3 class="text-lg font-bold mt-6">3.2 Flow การอัปโหลดรูป (Local Disk)</h3>
+<pre class="bg-base-300 p-4 rounded-box overflow-x-auto text-sm leading-6">1. Admin เลือกไฟล์ในฟอร์ม (drag & drop หรือ file input)
+2. Client → POST /api/uploads  (มี JWT cookie)  Body: FormData { file }
+3. Server ตรวจ type / ขนาด (png/jpg/webp/gif/svg, ≤ 5MB)
+   → บันทึกลง data/uploads/{uuid}.{ext}
+   → return { filename }
+4. เก็บ filename ลง Project.image ในฐานข้อมูล
+5. หน้าเว็บแสดงภาพผ่าน /api/uploads/{filename} (GET สาธารณะ, cache ยาว)
+
+การลบไฟล์ (ตอนลบโปรเจกต์ หรือเปลี่ยนรูป):
+- ลบโปรเจกต์ → DELETE /api/admin/projects/{id}  → server ลบไฟล์ให้ด้วย
+- เปลี่ยนรูปใหม่ / เอาออก → server ลบไฟล์เก่าให้อัตโนมัติ</pre>
+
+                <div class="alert alert-info mt-4 text-sm">
+                    <span>ข้อดี: ไม่ต้องตั้งค่า CORS / policy / external URL — ไฟล์อยู่บน server เดียว
+                    มี backup พร้อม disk เดียวกับแอป ใช้ <code>data/</code> และใส่ใน .gitignore</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ FILES ============ -->
+        <section id="files" class="card bg-base-200 shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title text-2xl">4. โครงสร้างไฟล์ที่จะสร้าง</h2>
+<pre class="bg-base-300 p-4 rounded-box overflow-x-auto text-sm leading-6">portfolio/
+├── .env                          # DATABASE_URL, JWT_SECRET, ADMIN_*
+├── data/uploads/                 # เก็บไฟล์รูป (ใน .gitignore)
+├── prisma/
+│   ├── schema.prisma             # User + Project
+│   └── seed.ts                   # สร้างแอดมินคนแรก (bcrypt hash)
+├── src/
+│   ├── proxy.ts                  # ป้องกัน /dashboard, /api/admin, /api/uploads (POST/DELETE)
+│   ├── lib/
+│   │   ├── prisma.ts             # PrismaClient singleton
+│   │   ├── auth.ts               # hashPassword / verifyPassword / getAuthUser
+│   │   ├── jwt.ts                # signToken / verifyToken (jose)
+│   │   ├── storage.ts            # saveImage / deleteImage / readImage (disk)
+│   │   ├── image.ts              # imageSrc() ใช้ฝั่ง client
+│   │   └── api.ts                # apiError / validation helpers
+│   └── app/
+│       ├── api/
+│       │   ├── auth/
+│       │   │   ├── login/route.ts     # POST → set httpOnly cookie
+│       │   │   ├── logout/route.ts    # POST → clear cookie
+│       │   │   └── me/route.ts        # GET → ข้อมูล session
+│       │   ├── uploads/
+│       │   │   ├── route.ts           # POST (admin) บันทึกรูป → { filename }
+│       │   │   └── [filename]/route.ts # GET (public) เสิร์ฟรูป / DELETE (admin)
+│       │   ├── projects/
+│       │   │   ├── route.ts           # GET (public, ?category=&search=)
+│       │   │   └── [id]/route.ts      # GET (public)
+│       │   └── admin/
+│       │       ├── projects/route.ts          # POST (admin) สร้าง
+│       │       └── projects/[id]/route.ts     # PATCH / DELETE (admin, ลบไฟล์ให้ด้วย)
+│       ├── dashboard/
+│       │   ├── page.tsx              # หน้า login (เชื่อม API)
+│       │   └── home/
+│       │       └── page.tsx          # Admin panel (Server Component + Prisma)
+│       └── projects/
+│           └── page.tsx              # fetch /api/projects
+├── src/components/
+│   ├── dashboard/
+│   │   ├── ProjectTable.tsx          # ตารางรายการโปรเจกต์
+│   │   ├── ProjectForm.tsx           # ฟอร์มเพิ่ม/แก้ไข
+│   │   ├── ImageUpload.tsx           # upload ผ่าน /api/uploads + preview
+│   │   └── DeleteButton.tsx          # ลบพร้อม confirm
+│   └── Projects/
+│       └── CategoryList.tsx          # เปลี่ยนเป็น fetch API</pre>
+            </div>
+        </section>
+
+        <!-- ============ SCHEMA ============ -->
+        <section id="schema" class="card bg-base-200 shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title text-2xl">5. Database Schema (Prisma)</h2>
+<pre class="bg-base-300 p-4 rounded-box overflow-x-auto text-sm leading-6">// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  admin
+}
+
+enum ProjectStatus {
+  completed
+  in-progress
+}
+
+model User {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String
+  role         Role     @default(admin)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Project {
+  id          String        @id @default(cuid())
+  name        String
+  description String
+  image       String?       // filename ใน data/uploads (เช่น abc123.webp)
+  tags        String[]      @default([])
+  categories  String[]      @default([])
+  year        String
+  status      ProjectStatus @default(completed)
+  github      String?
+  demo        String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([status])
+  @@index([categories])
+}</pre>
+            </div>
+        </section>
+
+        <!-- ============ API ============ -->
+        <section id="api" class="card bg-base-200 shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title text-2xl">6. API Routes</h2>
+                <div class="overflow-x-auto">
+                    <table class="table table-zebra table-sm">
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>Path</th>
+                                <th>Access</th>
+                                <th>หน้าที่</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="badge badge-success badge-sm">GET</span></td>
+                                <td><code>/api/projects</code></td>
+                                <td class="text-success font-semibold">Public</td>
+                                <td class="text-sm text-base-content/70">รายการโปรเจกต์ + <code>?category=</code> <code>?search=</code></td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-success badge-sm">GET</span></td>
+                                <td><code>/api/projects/[id]</code></td>
+                                <td class="text-success font-semibold">Public</td>
+                                <td class="text-sm text-base-content/70">ดึงโปรเจกต์เดี่ยว</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-warning badge-sm">POST</span></td>
+                                <td><code>/api/admin/projects</code></td>
+                                <td class="text-error font-semibold">🔒 Admin</td>
+                                <td class="text-sm text-base-content/70">เพิ่มโปรเจกต์ (validate + create)</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-warning badge-sm">PATCH</span></td>
+                                <td><code>/api/admin/projects/[id]</code></td>
+                                <td class="text-error font-semibold">🔒 Admin</td>
+                                <td class="text-sm text-base-content/70">แก้ไขโปรเจกต์</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-error badge-sm">DELETE</span></td>
+                                <td><code>/api/admin/projects/[id]</code></td>
+                                <td class="text-error font-semibold">🔒 Admin</td>
+                                <td class="text-sm text-base-content/70">ลบโปรเจกต์ (ลบรูปใน MinIO ด้วย)</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-warning badge-sm">POST</span></td>
+                                <td><code>/api/auth/login</code></td>
+                                <td class="text-success font-semibold">Public</td>
+                                <td class="text-sm text-base-content/70">ตรวจ bcrypt → set httpOnly cookie</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-warning badge-sm">POST</span></td>
+                                <td><code>/api/auth/logout</code></td>
+                                <td class="text-success font-semibold">Public</td>
+                                <td class="text-sm text-base-content/70">ล้าง cookie</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-success badge-sm">GET</span></td>
+                                <td><code>/api/auth/me</code></td>
+                                <td class="text-error font-semibold">🔒</td>
+                                <td class="text-sm text-base-content/70">เช็ค session (แสดง username / redirect)</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-warning badge-sm">POST</span></td>
+                                <td><code>/api/upload/presign</code></td>
+                                <td class="text-error font-semibold">🔒 Admin</td>
+                                <td class="text-sm text-base-content/70">สร้าง Presigned PUT URL + objectKey</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-error badge-sm">DELETE</span></td>
+                                <td><code>/api/upload/[key]</code></td>
+                                <td class="text-error font-semibold">🔒 Admin</td>
+                                <td class="text-sm text-base-content/70">ลบ object ใน MinIO</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ AUTH ============ -->
+        <section id="auth" class="card bg-base-200 shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title text-2xl">7. Auth &amp; Middleware</h2>
+
+                <h3 class="text-lg font-bold mt-2">7.1 Password Hashing (bcryptjs)</h3>
+<pre class="bg-base-300 p-4 rounded-box overflow-x-auto text-sm leading-6">// src/lib/auth.ts
+import bcrypt from "bcryptjs";
+
+const SALT_ROUNDS = 10;
+
+export async function hashPassword(password: string) {
+  return bcrypt.hash(password, SALT_ROUNDS);
+}
+
+export async function verifyPassword(password: string, hash: string) {
+  return bcrypt.compare(password, hash);
+}</pre>
+
+                <h3 class="text-lg font-bold mt-6">7.2 JWT (jose)</h3>
+<pre class="bg-base-300 p-4 rounded-box overflow-x-auto text-sm leading-6">// src/lib/jwt.ts
+import { SignJWT, jwtVerify } from "jose";
+
+const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+
+export async function signToken(payload: { userId: string; role: string }) {
+  return new SignJWT(payload)
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("7d")
+    .sign(secret);
+}
+
+export async function verifyToken(token: string) {
+  try {
+    const { payload } = await jwtVerify(token, secret);
+    return payload;
+  } catch {
+    return null;
+  }
+}</pre>
+
+                <h3 class="text-lg font-bold mt-6">7.3 Middleware</h3>
+<pre class="bg-base-300 p-4 rounded-box overflow-x-auto text-sm leading-6">// src/middleware.ts
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { verifyToken } from "@/lib/jwt";
+
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const token = request.cookies.get("token")?.value;
+  const session = token ? await verifyToken(token) : null;
+
+  // หน้า admin: ไม่มี session → redirect ไปหน้า login
+  if (pathname.startsWith("/dashboard")) {
+    if (!session) {
+      const url = new URL("/dashboard", request.url);
+      return NextResponse.redirect(url);
+    }
+    return NextResponse.next();
+  }
+
+  // API admin/upload: ไม่มี session → 401
+  if (pathname.startsWith("/api/admin") || pathname.startsWith("/api/upload")) {
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    return NextResponse.next();
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ["/dashboard/:path*", "/api/admin/:path*", "/api/upload/:path*"],
+};</pre>
+
+                <h3 class="text-lg font-bold mt-6">7.4 หน้า Login เดิม (src/app/dashboard/page.tsx)</h3>
+                <ul class="list-disc list-inside text-sm text-base-content/80 leading-7 space-y-1">
+                    <li>ลบการตรวจ <code>username === "phongphat" &amp;&amp; password === "ohm331040"</code> ที่ hardcode ทิ้ง</li>
+                    <li>เปลี่ยนเป็นฟอร์ม submit ไป <code>POST /api/auth/login</code> (fetch + JSON)</li>
+                    <li>แสดง error message, loading state, redirect ไป <code>/dashboard/home</code> เมื่อสำเร็จ</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ============ STORAGE ============ -->
+        <section id="storage" class="card bg-base-200 shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title text-2xl">8. Local Image Storage</h2>
+
+                <h3 class="text-lg font-bold mt-2">8.1 โครงสร้าง</h3>
+<pre class="bg-base-300 p-4 rounded-box overflow-x-auto text-sm leading-6">data/uploads/          # เก็บไฟล์รูป (gitignore แล้ว)
+├── {uuid}.png
+├── {uuid}.jpg
+├── {uuid}.webp
+└── ...</pre>
+
+                <h3 class="text-lg font-bold mt-6">8.2 ตัวอย่างโค้ด src/lib/storage.ts</h3>
+<pre class="bg-base-300 p-4 rounded-box overflow-x-auto text-sm leading-6">import { randomUUID } from "crypto";
+import { mkdir, writeFile, unlink, readFile } from "fs/promises";
+import path from "path";
+
+const UPLOADS_DIR = path.join(process.cwd(), "data", "uploads");
+
+export const ALLOWED_IMAGE_TYPES: Record&lt;string, string&gt; = {
+  "image/png": "png", "image/jpeg": "jpg",
+  "image/webp": "webp", "image/gif": "gif",
+  "image/svg+xml": "svg",
+};
+
+export const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+
+export function isValidImageFilename(filename: string): boolean {
+  return (
+    filename.length &gt; 0 &amp;&amp; filename.length &lt;= 255 &amp;&amp;
+    path.basename(filename) === filename &amp;&amp;          // ไม่มี path traversal
+    !filename.includes("..") &amp;&amp;
+    /^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(filename)
+  );
+}
+
+export async function saveImage(buffer: Buffer, contentType: string) {
+  const ext = ALLOWED_IMAGE_TYPES[contentType];
+  if (!ext) throw new Error("Unsupported content type");
+  const filename = `${randomUUID()}.${ext}`;
+  await mkdir(UPLOADS_DIR, { recursive: true });
+  await writeFile(path.join(UPLOADS_DIR, filename), buffer);
+  return filename;
+}
+
+export async function deleteImage(filename: string) {
+  if (!isValidImageFilename(filename)) return;
+  try { await unlink(path.join(UPLOADS_DIR, filename)); } catch { /* ENOENT = โอเค */ }
+}</pre>
+
+                <h3 class="text-lg font-bold mt-6">8.3 API route</h3>
+<pre class="bg-base-300 p-4 rounded-box overflow-x-auto text-sm leading-6"># POST /api/uploads            (admin) FormData { file } → { filename }
+# GET  /api/uploads/{filename} (public) เสิร์ฟรูป + Cache-Control ยาว
+# DELETE /api/uploads/{filename} (admin) ลบไฟล์</pre>
+                <div class="alert alert-warning mt-3 text-sm">
+                    <span>หมายเหตุ: ถ้าย้าย/นับ deploy ใหม่ต้องมี <code>data/uploads/</code> ไปด้วย
+                    (หรือ mount เป็น volume) ไม่งั้นรูปจะหาย — วิธีนี้ไม่ต้องตั้งค่า CORS / external URL แต่อย่างใด</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ ENV ============ -->
+        <section id="env" class="card bg-base-200 shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title text-2xl">9. Env Variables</h2>
+                <p class="text-sm text-base-content/80 mb-3">ตัวอย่างไฟล์ <code>.env</code> (ห้าม commit — มีใน .gitignore แล้ว):</p>
+<pre class="bg-base-300 p-4 rounded-box overflow-x-auto text-sm leading-6"># Database (PostgreSQL server ของตัวเอง)
+DATABASE_URL="postgresql://user:password@host:5432/portfolio"
+
+# Auth
+JWT_SECRET="เปลี่ยนเป็นค่าสุ่มยาวๆ (เช่น openssl rand -base64 32)"
+
+# Admin เริ่มต้น (ใช้ตอน seed)
+ADMIN_USERNAME="admin"
+ADMIN_PASSWORD="รหัสผ่านที่แข็งแรง"</pre>
+                <div class="alert alert-info mt-3 text-sm">
+                    <span>คำสั่งสุ่ม <code>JWT_SECRET</code>: <code>openssl rand -base64 32</code> (PowerShell: <code>[Convert]::ToBase64String([System.Security.Cryptography.RandomNumberGenerator]::GetBytes(32))</code>)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ SECURITY ============ -->
+        <section id="security" class="card bg-base-200 shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title text-2xl">10. Security Checklist</h2>
+                <ul class="list-disc list-inside text-sm text-base-content/80 leading-7 space-y-1">
+                    <li>รหัสผ่านเก็บเป็น <strong>bcrypt hash</strong> เท่านั้น — ไม่เก็บ plain text</li>
+                    <li>JWT เก็บใน <strong>httpOnly cookie</strong> (JavaScript อ่านไม่ได้) + <code>sameSite: lax</code> + <code>secure</code> ใน production + <code>maxAge</code> 7 วัน</li>
+                    <li><strong>Middleware</strong> ป้องกัน <code>/dashboard/*</code>, <code>/api/admin/*</code>, <code>/api/uploads</code> POST/DELETE — ไม่มี token → redirect/401 (GET รูปปล่อยสาธารณะ)</li>
+                    <li>เช็ค <code>role === "admin"</code> ใน helper <code>getAuthUser()</code> สำหรับ API ที่ sensitive</li>
+                    <li>ลบ password hardcode ใน <code>src/app/dashboard/page.tsx</code> ออก</li>
+                    <li>เซ็ต env ทั้งหมดลง <code>.env</code> (มีใน .gitignore แล้ว) — ไม่ hardcode secret ในโค้ด</li>
+                    <li>Validation ฝั่ง server ทุก endpoint: ชื่อ/คำอธิบายไม่ว่าง, status ตรง enum, ขนาดไฟล์ ≤ 5MB, allow-list content type (png/jpg/webp/gif/svg)</li>
+                    <li>ตั้งชื่อไฟล์ใหม่ด้วย <code>crypto.randomUUID()</code> + ext เดิม — ป้องกัน path traversal และชื่อซ้ำ</li>
+                    <li>Middleware matcher แคบที่สุดเท่าที่จำเป็น (เฉพาะ path ที่ต้องการ)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ============ BUILD STEPS ============ -->
+        <section id="steps" class="card bg-base-200 shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title text-2xl">11. ขั้นตอนการ Build</h2>
+                <ol class="steps steps-vertical">
+                    <li class="step step-primary">ติดตั้ง dependencies + สร้าง schema</li>
+                    <li class="step">Migrate database + สร้างแอดมิน (seed)</li>
+                    <li class="step">สร้าง lib: prisma / auth / jwt / storage / api</li>
+                    <li class="step">สร้าง API: auth + uploads + projects</li>
+                    <li class="step">สร้าง middleware</li>
+                    <li class="step">สร้าง Admin UI + แก้หน้า login เดิม</li>
+                    <li class="step">เชื่อมหน้า /projects กับ API</li>
+                    <li class="step">ตั้งค่า local storage (data/uploads + .gitignore)</li>
+                    <li class="step">ทดสอบ flow ทั้งหมด + bun run lint</li>
+                </ol>
+
+                <div class="divider"></div>
+                <h3 class="text-lg font-bold">คำสั่งที่ต้องใช้</h3>
+<pre class="bg-base-300 p-4 rounded-box overflow-x-auto text-sm leading-6"># 1. ติดตั้ง dependencies
+bun add @prisma/client bcryptjs jose
+bun add -d prisma @types/bcryptjs
+
+# 2. สร้าง schema + migrate + seed (ต้องมี .env ก่อน)
+bunx prisma migrate dev --name init
+bun run prisma:seed      # หรือ bunx tsx prisma/seed.ts
+
+# 3. ตรวจ type
+bun run lint             # tsc --noEmit</pre>
+            </div>
+        </section>
+
+        <footer class="pb-8 text-center text-sm text-base-content/50">
+            Portfolio. — แผนระบบ Admin &amp; Upload · อัปเดตล่าสุดเมื่อสร้างไฟล์นี้
+        </footer>
+    </main>
+</body>
+</html>
