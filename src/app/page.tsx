@@ -54,7 +54,7 @@ export default function Home() {
             <div className="relative aspect-[4/5] w-full overflow-visible">
               <div className="absolute inset-x-4 bottom-4 h-1/2 rounded-full bg-primary/20 blur-3xl" />
               <Image
-              src="/images/self-photo2.png"
+              src="/images/self-photo.webp"
               alt="Ohm Phongphat"
                 fill
                 priority
