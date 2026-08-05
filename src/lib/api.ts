@@ -9,7 +9,7 @@ export function apiErrorFrom(
   message = "Internal server error",
   status = 500
 ) {
-  console.error(`[api] ${message}`, error);
+  console.warn(`[api] ${message}`, error);
   return apiError(message, status);
 }
 
