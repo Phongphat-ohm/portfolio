@@ -152,7 +152,7 @@ export default function DashboardPage() {
                                 id="username"
                                 required
                                 autoComplete="off"
-                                placeholder="phongphat"
+                                placeholder="กรอกชื่อผู้ใช้"
                                 className="input input-bordered h-12 w-full bg-base-100 focus:border-primary focus:outline-none"
                             />
                         </label>
