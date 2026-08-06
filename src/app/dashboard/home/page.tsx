@@ -1,8 +1,10 @@
 import { redirect } from "next/navigation";
 import { getAuthUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getDailyVisits } from "@/lib/analytics";
 import LogoutButton from "@/components/dashboard/LogoutButton";
 import ProjectTable from "@/components/dashboard/ProjectTable";
+import VisitorsChart from "@/components/dashboard/VisitorsChart";
 import {
     FaCircleCheck,
     FaFolderOpen,
@@ -22,6 +24,8 @@ export default async function DashboardHome() {
     const projects = await prisma.project.findMany({
         orderBy: { createdAt: "desc" },
     });
+
+    const dailyVisits = await getDailyVisits(30);
 
     const total = projects.length;
     const completed = projects.filter((p) => p.status === "completed").length;
@@ -112,7 +116,11 @@ export default async function DashboardHome() {
                     ))}
                 </div>
 
-                <ProjectTable projects={projects} />
+                <VisitorsChart data={dailyVisits} />
+
+                <div className="mt-5">
+                    <ProjectTable projects={projects} />
+                </div>
             </div>
         </main>
     );

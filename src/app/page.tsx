@@ -1,6 +1,7 @@
 "use client";
 
 import Navbar from "@/components/Navbar";
+import VisitorStats from "@/components/VisitorStats";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -64,6 +65,7 @@ export default function Home() {
             </div>
           </motion.div>
         </section>
+        <VisitorStats />
       </main>
     </>
   );

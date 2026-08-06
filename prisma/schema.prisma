@@ -42,3 +42,11 @@ model Project {
   @@index([status])
   @@index([categories])
 }
+
+model DailyVisit {
+  id        String   @id @default(cuid())
+  date      DateTime @unique
+  count     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
