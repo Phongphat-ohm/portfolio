@@ -56,7 +56,9 @@ export async function PATCH(
     }
     for (const field of ["image", "github", "demo"] as const) {
       if (body[field] !== undefined) {
-        if (typeof body[field] !== "string") return apiError(`${field} must be a string`, 400);
+        if (body[field] !== null && typeof body[field] !== "string") {
+          return apiError(`${field} must be a string or null`, 400);
+        }
         data[field] = body[field] || null;
       }
     }
@@ -67,7 +69,7 @@ export async function PATCH(
       data,
     });
 
-    if (oldImage && oldImage !== data.image) {
+    if (body.image !== undefined && oldImage && oldImage !== data.image) {
       await deleteImage(oldImage);
     }
 

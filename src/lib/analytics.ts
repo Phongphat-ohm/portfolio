@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { redis } from "@/lib/redis";
+import { connectRedis, redis } from "@/lib/redis";
 
 const TIME_ZONE = "Asia/Bangkok";
 const DAY_TTL = 48 * 60 * 60;
@@ -73,6 +73,8 @@ export async function trackUniqueVisit(
   ip?: string | null
 ): Promise<{ counted: boolean }> {
   try {
+    await connectRedis();
+
     if (ip) {
       const rlKey = `rl:track:${ip}`;
       const count = await redis.incr(rlKey);
@@ -94,6 +96,7 @@ export async function trackUniqueVisit(
 
 export async function getTodayCount(): Promise<number> {
   try {
+    await connectRedis();
     return await redis.sCard(`visits:${todayKey()}`);
   } catch (err) {
     console.warn("[analytics] today count failed:", err);
@@ -113,6 +116,7 @@ export async function getTotalCount(): Promise<number> {
 
 export async function flushIfNeeded(): Promise<void> {
   try {
+    await connectRedis();
     const today = todayKey();
     const lastFlush = await redis.get("analytics:lastFlushDate");
     if (lastFlush === today) return;

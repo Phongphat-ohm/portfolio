@@ -1,6 +1,6 @@
-import { randomUUID } from "crypto";
-import { mkdir, writeFile, unlink, readFile } from "fs/promises";
+import { unlink, readFile } from "fs/promises";
 import path from "path";
+import { deleteObject, extractKeyFromUrl, isOwnS3Url } from "@/lib/s3";
 
 const UPLOADS_DIR = path.join(process.cwd(), "data", "uploads");
 
@@ -38,24 +38,33 @@ function filePath(filename: string) {
   return path.join(UPLOADS_DIR, filename);
 }
 
-export async function saveImage(buffer: Buffer, contentType: string): Promise<string> {
-  const ext = ALLOWED_IMAGE_TYPES[contentType];
-  if (!ext) throw new Error("Unsupported content type");
-  if (buffer.length === 0 || buffer.length > MAX_IMAGE_SIZE) {
-    throw new Error("Invalid file size");
-  }
-  const filename = `${randomUUID()}.${ext}`;
-  await mkdir(UPLOADS_DIR, { recursive: true });
-  await writeFile(filePath(filename), buffer);
-  return filename;
-}
+/**
+ * ลบรูปที่อ้างอิงด้วย value จาก DB ซึ่งอาจเป็น:
+ * - URL ของ S3 bucket เราเอง -> ลบ object ใน S3
+ * - ชื่อไฟล์ใน data/uploads (ระบบเก่า) -> ลบไฟล์บน disk
+ * - URL ภายนอก (เช่น cloud.ppkxb.space เดิม) -> ลบไม่ได้ ข้ามไป
+ */
+export async function deleteImage(imageRef: string | null | undefined) {
+  if (!imageRef || typeof imageRef !== "string") return;
 
-export async function deleteImage(filename: string) {
-  if (!isValidImageFilename(filename)) return;
-  try {
-    await unlink(filePath(filename));
-  } catch {
-    // ไม่มีไฟล์ให้ลบ (ENOENT) ก็ปล่อยผ่าน
+  if (isOwnS3Url(imageRef)) {
+    const key = extractKeyFromUrl(imageRef);
+    if (key) {
+      try {
+        await deleteObject(key);
+      } catch (error) {
+        console.warn("[storage] S3 delete failed:", error);
+      }
+    }
+    return;
+  }
+
+  if (isValidImageFilename(imageRef)) {
+    try {
+      await unlink(filePath(imageRef));
+    } catch {
+      // ไม่มีไฟล์ให้ลบ (ENOENT) ก็ปล่อยผ่าน
+    }
   }
 }
 

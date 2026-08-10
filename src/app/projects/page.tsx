@@ -11,7 +11,7 @@ export default function Page() {
             <div className="mx-auto w-full max-w-7xl px-4 pb-16 pt-28 sm:px-6 lg:px-8">
                 <div className="relative overflow-hidden rounded-box">
                     <motion.video
-                        src="/vdo/bg.mp4"
+                        src="https://seaweed-s3.ppkxb.space/portfolio/uploads/bg.mp4"
                         autoPlay
                         loop
                         muted
