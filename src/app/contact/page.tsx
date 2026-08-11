@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import { FaGithub, FaLine, FaPhone } from "react-icons/fa6";
@@ -60,6 +61,7 @@ export default function Page() {
             })}
           </div>
         </section>
+        <Footer />
       </main>
     </>
   );

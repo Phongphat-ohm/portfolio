@@ -80,7 +80,7 @@ export default function VisitorStats() {
           <p className="text-sm font-semibold uppercase tracking-widest text-primary">
             Visitor Stats
           </p>
-          <h2 className="mt-2 text-3xl font-bold nunito sm:text-4xl">
+          <h2 className="mt-2 text-3xl font-bold sm:text-4xl">
             จำนวนผู้เข้าชมเว็บไซต์
           </h2>
         </div>

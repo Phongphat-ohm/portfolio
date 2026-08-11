@@ -1,5 +1,6 @@
 "use client";
 
+import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import VisitorStats from "@/components/VisitorStats";
 import { motion } from "framer-motion";
@@ -66,6 +67,7 @@ export default function Home() {
           </motion.div>
         </section>
         <VisitorStats />
+        <Footer />
       </main>
     </>
   );
