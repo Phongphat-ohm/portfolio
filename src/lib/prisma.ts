@@ -1,4 +1,5 @@
 import { PrismaPg } from "@prisma/adapter-pg";
+import { databaseConnectionString } from "./db-connection";
 import { PrismaClient } from "@/generated/prisma/client";
 
 const globalForPrisma = globalThis as unknown as {
@@ -14,7 +15,7 @@ function createPrismaClient() {
 
   return new PrismaClient({
     adapter: new PrismaPg({
-      connectionString,
+      connectionString: databaseConnectionString(connectionString),
       max: Math.max(1, Number(process.env.DATABASE_POOL_MAX || 3)),
       idleTimeoutMillis: 20_000,
       connectionTimeoutMillis: 10_000,

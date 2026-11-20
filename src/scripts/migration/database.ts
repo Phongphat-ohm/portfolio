@@ -17,7 +17,7 @@ await run(async () => {
       const historyExists = (await client.query(`SELECT to_regclass('public._prisma_migrations') AS name`)).rows[0].name;
       const migrations = historyExists ? (await client.query(`SELECT migration_name,checksum,finished_at,rolled_back_at FROM public._prisma_migrations ORDER BY migration_name`)).rows : [];
       const rows = {} as Snapshot["rows"];
-      for (const table of tables) rows[table] = (await client.query(`SELECT * FROM public.${quote(table)} ORDER BY id`)).rows;
+      for (const table of tables) rows[table] = schema.some((column) => column.table_name === table) ? (await client.query(`SELECT * FROM public.${quote(table)} ORDER BY id`)).rows : [];
       const databaseVersion = (await client.query("SELECT version() AS version")).rows[0].version;
       await client.query("COMMIT");
       const report = { capturedAt: new Date().toISOString(), databaseVersion, schema, indexes, constraints, migrations, counts: Object.fromEntries(tables.map((table) => [table, rows[table].length])), fileBytes: rows.UploadedFile.reduce((sum, file) => sum + Number(file.size), 0) };
@@ -30,12 +30,14 @@ await run(async () => {
       return;
     }
     const snapshot = await loadSnapshot(directory);
+    const targetTables = new Set((await client.query(`SELECT table_name FROM information_schema.tables WHERE table_schema='public'`)).rows.map((row) => row.table_name));
     if (command === "import") {
       if (process.env.CONFIRM_TARGET_IMPORT !== "true") throw new Error("Target import requires CONFIRM_TARGET_IMPORT=true and an empty target.");
       await client.query("BEGIN");
       try {
-        for (const table of tables) await client.query(`LOCK TABLE public.${quote(table)} IN ACCESS EXCLUSIVE MODE`);
+        for (const table of tables) if (targetTables.has(table)) await client.query(`LOCK TABLE public.${quote(table)} IN ACCESS EXCLUSIVE MODE`);
         for (const table of tables) {
+          if (!targetTables.has(table)) { if (snapshot.rows[table].length) throw new Error(`Target is missing ${table}.`); continue; }
           if (Number((await client.query(`SELECT count(*) AS n FROM public.${quote(table)}`)).rows[0].n)) throw new Error("Target tables must be empty. Import into a new target, never overwrite live data.");
           for (const row of snapshot.rows[table]) {
             const fields = Object.keys(row);
@@ -48,15 +50,30 @@ await run(async () => {
     // A verified Storage manifest accounts for intentional key/provider changes only.
     let manifest: { entries: { fileId?: string; newKey: string; status: string }[] } | undefined;
     try { manifest = JSON.parse(await readFile(path.join(directory, "files.json"), "utf8")); } catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
+    let s3: { entries: { fileId: string; projectIds: string[]; status: string; metadata?: Record<string, unknown> }[] } | undefined;
+    try { s3 = JSON.parse(await readFile(path.join(directory, "s3-files.json"), "utf8")); } catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
     await client.query("BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY");
     for (const table of tables) {
+      if (!targetTables.has(table)) { if (snapshot.rows[table].length) throw new Error(`Target is missing ${table}.`); continue; }
       const actual = (await client.query(`SELECT * FROM public.${quote(table)} ORDER BY id`)).rows;
       const expected = structuredClone(snapshot.rows[table]);
+      if (s3 && table === "UploadedFile") {
+        for (const entry of s3.entries) if (entry.status === "verified" && entry.metadata) expected.push(entry.metadata);
+        expected.sort((a, b) => String(a.id).localeCompare(String(b.id), "en"));
+      }
+      if (s3 && table === "Project") for (const project of expected) {
+        const entry = s3.entries.find((entry) => entry.status === "verified" && entry.projectIds.includes(String(project.id)));
+        if (entry) project.image = `/api/files/${entry.fileId}`;
+      }
       if (table === "UploadedFile" && manifest) for (const file of expected) {
         const entry = manifest.entries.find((entry) => entry.fileId === file.id && entry.status === "verified");
         if (entry) { file.key = entry.newKey; file.provider = "supabase"; }
       }
-      if (canonical(actual) !== canonical(expected)) throw new Error(`Verification mismatch in ${table}.`);
+      // The merged schema adds nullable/defaulted fields; compare every original
+      // column while allowing those additive fields in the target.
+      const fields = Object.keys(expected[0] || actual[0] || {});
+      const projected = actual.map((row) => Object.fromEntries(fields.map((field) => [field, row[field]])));
+      if (canonical(projected) !== canonical(expected)) throw new Error(`Verification mismatch in ${table}.`);
     }
     await client.query("COMMIT");
     await saveJson(path.join(directory, "database-verification.json"), { verifiedAt: new Date().toISOString(), passed: true });

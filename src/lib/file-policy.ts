@@ -16,8 +16,8 @@ export function detectFileType(bytes: Uint8Array): string | null {
   return null;
 }
 
-export function publicationReference(id: string) {
-  return { published: true, OR: [{ fileId: id }, { imageUrl: `/api/files/${id}` }] };
+export function publicationReference(id: string, imageField: "image" | "imageUrl" = "imageUrl") {
+  return { published: true, OR: [{ fileId: id }, { [imageField]: `/api/files/${id}` }] };
 }
 
 export const publicFileSelect = {

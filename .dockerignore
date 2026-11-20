@@ -1,0 +1,30 @@
+# dependencies / build output
+node_modules
+.next
+out
+build
+dist
+coverage
+
+# runtime data (uploaded images)
+data
+
+# git
+.git
+.gitignore
+
+# env & secrets
+.env
+.env.*
+!.env.example
+
+# logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-error.log*
+
+# misc
+tsconfig.tsbuildinfo
+.DS_Store
+plans.html

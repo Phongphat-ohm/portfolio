@@ -5,13 +5,13 @@ import { readFile } from "node:fs/promises";
 const database = new PGlite();
 beforeAll(async () => {
   await database.exec("CREATE ROLE anon; CREATE ROLE authenticated;");
-  await database.exec(await readFile("prisma/migrations/20260527163513_init/migration.sql", "utf8"));
+  await database.exec(await readFile("docs/legacy-migrations/20260527163513_init.sql", "utf8"));
   // Simulate legacy data and hash bytes BEFORE applying the new migration.
   await database.exec(`INSERT INTO "AdminUser" VALUES ('old-admin','admin',null,'pbkdf2_sha256$120000$salt$original',null,'admin','2025-01-01','2025-01-01');
     INSERT INTO "UploadedFile" (id,"ownerType",filename,key,"mimeType",size,url,provider,"updatedAt") VALUES ('legacy-file','GENERAL','old.pdf','/portfolio/old.pdf','application/pdf',123,'/api/files/legacy-file','sftpgo','2025-01-01');
     INSERT INTO "Project" (id,title,slug,summary,"fileId",published,"updatedAt") VALUES ('draft','Draft','draft','draft','legacy-file',false,'2025-01-01');
     INSERT INTO "Certificate" (id,title,issuer,"imageUrl",published,"updatedAt") VALUES ('cert','Cert','Issuer','/api/files/legacy-file',true,'2025-01-01');`);
-  await database.exec(await readFile("prisma/migrations/20261120000000_supabase_storage/migration.sql", "utf8"));
+  await database.exec(await readFile("docs/legacy-migrations/20261120000000_supabase_storage.sql", "utf8"));
 }, 30000);
 afterAll(async () => { await database.close(); });
 

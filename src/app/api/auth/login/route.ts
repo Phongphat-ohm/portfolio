@@ -1,3 +1,4 @@
+import { signToken } from "@/lib/jwt";
 import { NextResponse } from "next/server";
 import { setSessionCookie, validateLogin } from "@/lib/auth";
 import { maintenanceResponse, jsonError } from "@/lib/api";
@@ -25,5 +26,7 @@ export async function POST(request: Request) {
     role: admin.role,
   });
 
-  return NextResponse.json({ user: admin });
+  const response = NextResponse.json({ ok: true, username: admin.username, user: admin }, { headers: { "Cache-Control": "no-store" } });
+  response.cookies.set("token", await signToken({ userId: admin.id, role: admin.role }), { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", maxAge: 60 * 60 * 24 * 7, path: "/" });
+  return response;
 }

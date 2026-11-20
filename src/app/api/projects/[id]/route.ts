@@ -1,3 +1,4 @@
+import { projectForClient, projectInput } from "@/lib/projects";
 import { NextResponse, type NextRequest } from "next/server";
 import { publicFileSelect } from "@/lib/file-policy";
 import { maintenanceResponse } from "@/lib/api";
@@ -11,47 +12,28 @@ type RouteContext = {
 export async function PUT(request: NextRequest, context: RouteContext) {
   const maintenance = maintenanceResponse();
   if (maintenance) return maintenance;
-  if (!ensureAdmin(request)) {
+  if (!await ensureAdmin(request)) {
     return unauthorized();
   }
 
   const { id } = await context.params;
   const body = await request.json();
-  const title = String(body.title ?? "").trim();
-  const summary = String(body.summary ?? "").trim();
-
-  if (!title || !summary) {
-    return jsonError("Project title and summary are required.");
-  }
+  const data = projectInput(body);
+  if (!data.name || !data.summary) return jsonError("Project name and description are required.");
 
   const project = await prisma.project.update({
     where: { id },
-    data: {
-      title,
-      slug: String(body.slug || slugify(title)),
-      summary,
-      description: body.description ? String(body.description) : null,
-      stack: parseStringList(body.stack),
-      repoUrl: body.repoUrl ? String(body.repoUrl) : null,
-      liveUrl: body.liveUrl ? String(body.liveUrl) : null,
-      imageUrl: body.imageUrl ? String(body.imageUrl) : null,
-      fileId: body.fileId ? String(body.fileId) : null,
-      startDate: parseOptionalDate(body.startDate),
-      endDate: parseOptionalDate(body.endDate),
-      featured: Boolean(body.featured),
-      published: body.published !== false,
-      sortOrder: Number(body.sortOrder || 0),
-    },
+    data,
     include: { file: { select: publicFileSelect } },
   });
 
-  return NextResponse.json({ project });
+  return NextResponse.json({ project: projectForClient(project) });
 }
 
 export async function DELETE(request: NextRequest, context: RouteContext) {
   const maintenance = maintenanceResponse();
   if (maintenance) return maintenance;
-  if (!ensureAdmin(request)) {
+  if (!await ensureAdmin(request)) {
     return unauthorized();
   }
 
@@ -59,4 +41,11 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
   await prisma.project.delete({ where: { id } });
 
   return NextResponse.json({ ok: true });
+}
+
+export async function GET(request: NextRequest, context: RouteContext) {
+  const { id } = await context.params;
+  const project = await prisma.project.findFirst({ where: { id, ...(!await ensureAdmin(request) ? { published: true } : {}) }, include: { file: { select: publicFileSelect } } });
+  if (!project) return jsonError("Project not found", 404);
+  return NextResponse.json({ project: projectForClient(project) }, { headers: { "Cache-Control": "private, no-store", Vary: "Cookie" } });
 }

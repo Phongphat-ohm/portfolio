@@ -1,244 +1,161 @@
 # Supabase migration and operations
 
-## Architecture and required access
+## Current architecture
 
-Next.js remains the API/auth boundary; Prisma connects to Supabase Postgres. Storage
-uses a private `portfolio-files` bucket and a server-only secret key. Browser code
-does not receive a Supabase key. Existing usernames, hashes, IDs and cookie format
-are preserved. Keep AUTH_SECRET unchanged during cutover.
+The repository now includes origin/main through ec882c3 (12 upstream commits).
+Use the upstream User, Project and DailyVisit schema as the source of truth. User
+passwords remain bcrypt and the token cookie remains an HS256 JWT using JWT_SECRET.
+The earlier portfolio_session/PBKDF2 format and certificate dashboard remain
+supported for compatibility. The merged Project model keeps upstream fields and
+adds publication, file references, sorting, featured and optional legacy fields.
 
-Use Node >=22 and Bun 1.3.11 or newer. Supabase SDK is pinned to 2.119.2. CLI stable
-was 3.2.0 when checked on 2026-11-20; it is not required by these transfer scripts.
-If using CLI, pin a reviewed stable version and inspect its `--help` first: v3
-defaults to local targets and requires explicit remote selection for hosted work.
-Do not use Supabase CLI migrations alongside Prisma for the application's schema.
+Next.js and Prisma remain. PostgreSQL and all source S3 objects now use Supabase.
+Redis remains the existing analytics cache; migrating Redis was outside the chosen
+Database/Storage scope. Preserve both AUTH_SECRET and JWT_SECRET during deployment.
 
-Supabase access, source database connectivity, target project refs, region, plan,
-off-site backup destination, alert destination and hosting secrets must be supplied
-before the hosted steps can run. Never paste passwords into command arguments or
-commit .env files, backups, manifests or database exports.
+New uploads use a private Supabase bucket and accept JPEG/PNG/WebP/GIF/PDF <=10 MiB.
+The upstream dashboard upload component now uses the checked proxy upload flow;
+old S3 presigning returns 410. Existing historical file types are preserved,
+including unreferenced files. Public reads require a published Project/Certificate
+reference. Shared objects are not deleted when a project/image is detached.
 
-Create separate staging and production Cloud projects with the latest stable
-PostgreSQL available in the region nearest the Next.js host. Record the actual
-version, project ref, region, quota, upload limit and connection limit in the
-deployment record. Disable the Data API in the dashboard; test Storage afterward.
-Use scoped management tokens, not account-wide tokens, for CLI/CI/MCP.
+## Migration history and connections
 
-## Environment and permissions
+The active Prisma migration sequence is:
 
-Copy `.env.example` to a private environment file and replace placeholders.
-`DATABASE_URL` is the `portfolio_app` runtime user via transaction pooler (6543).
-`DIRECT_URL` and `TARGET_DATABASE_URL` are the migration user via session pooler
-(5432), or a direct connection where IPv6 is supported. Preserve verified TLS;
-never resolve certificate problems by disabling certificate verification.
-`PrismaPg` uses a default maximum of 3 connections per process, configurable via
-DATABASE_POOL_MAX. Budget connections across all instances, workers and builds.
+1. 20260805142549_init (upstream User and Project)
+2. 20260806112424_add_daily_visit
+3. 20261120120000_supabase_integration (compatibility models, publication fields,
+   file metadata/cleanup, indexes, restricted runtime grants and seven RLS tables)
 
-`SUPABASE_SECRET_KEY` is the new `sb_secret_...` key, never NEXT_PUBLIC_. Keep source
-SFTPGo credentials in the migration environment only; the new runtime never uses
-SFTPGo. Existing ADMIN_USERNAME/ADMIN_PASSWORD fallback is retained for compatibility;
-prefer existing AdminUser rows. Production AUTH_SECRET must be set to a real secret.
+The earlier four-table draft migrations are archived under docs/legacy-migrations;
+never apply them alongside the upstream initial migration. Tests retain these
+fixtures to exercise older snapshot handling. Source migration checksums matched
+upstream Git blobs; Windows working copies differ only by CRLF/LF endings.
 
-Prisma migrations create the NOLOGIN `portfolio_runtime` group, enable RLS on five
-application tables, revoke PUBLIC/anon/authenticated table grants, and grant:
+DATABASE_URL uses portfolio_app via transaction pooler port 6543. DIRECT_URL and
+TARGET_DATABASE_URL use the migration connection via session pooler port 5432.
+DATABASE_POOL_MAX defaults to 3 per process. The runtime has SELECT on User/AdminUser
+and CRUD on application content/analytics/cleanup tables, with no table ownership,
+schema CREATE, role management or BYPASSRLS. Authorization occurs in the trusted
+Next.js routes; API roles anon/authenticated have no application-table grants.
 
-| Table | Runtime access |
-| --- | --- |
-| AdminUser | SELECT for password verification |
-| Project, Certificate, UploadedFile | SELECT/INSERT/UPDATE/DELETE |
-| StorageCleanupJob | SELECT/INSERT/UPDATE/DELETE |
+Postgres uses verify-full and the official Supabase CA in
+config/certs/supabase-ca-2021.crt. Its SHA-256 fingerprint is
+80:70:25:AD:50:D4:ED:21:9D:2C:9C:7D:29:9C:00:4F:82:4E:B0:0C:F7:F6:5A:FE:F6:07:D0:7B:72:E6:CA:FA.
+The certificate is public and traced into Next.js builds. DATABASE_SSL_CA_FILE can
+select another reviewed CA file. Never disable certificate/hostname verification.
+The client-to-pooler TLS connection was checked as encrypted and authorized;
+pg_stat_ssl on the backend reports the pooler's backend connection instead.
 
-RLS policies target the runtime group, not Supabase Auth users. Per-user admin
-authorization remains in Next.js. The runtime login must not own tables, inherit
-an owner role, have schema CREATE, BYPASSRLS, superuser, or role-management rights.
-Run `admin:create` only with the migration connection (DIRECT_URL), not runtime
-permissions. RLS is not a replacement for the custom session guard.
+## Repeating the S3 migration into a NEW target
 
-## Rehearsal: database and source file backup
+Keep source credentials only in the private .env. URL-encode passwords containing
+@ or other reserved characters. SOURCE_DATABASE_URL must reach the actual source;
+internal Docker service names require a tunnel from a machine outside that network.
+Use SOURCE_S3_* for the legacy S3 service and SUPABASE_* for the destination.
 
-Run these from the repository root in PowerShell after loading the private source
-environment. Paths below must be outside the repository, on an encrypted volume
-with access limited to operators. On Windows restrict the folder ACL explicitly;
-POSIX mode flags alone do not enforce Windows ACLs.
+Use Bun 1.3.11+ and Node 22+. bun.lockb is the canonical dependency lockfile; the
+upstream npm lockfile was removed to avoid two inconsistent dependency graphs.
+Builds do not implicitly execute migrations or seed/reset admin accounts.
 
-```powershell
-bun install --frozen-lockfile
-bun run prisma:generate
-bun run db:transfer inventory C:/secure-backups/portfolio/rehearsal
-bun run db:transfer export C:/secure-backups/portfolio/rehearsal
-bun run storage:migrate backup-sftp C:/secure-backups/portfolio/rehearsal
-```
+Take a NEW immutable snapshot directory outside the repository after freezing all
+source writers. The observed source application service had zero replicas during
+this migration. Recheck source state before a future cutover; a local maintenance
+flag alone does not freeze a separately hosted source deployment.
 
-SOURCE_DATABASE_URL must point at the old database with read-only access to the
-four application tables, migrations and catalog. `inventory.json` captures column
-types/defaults, indexes, constraints, migration history, counts, file sizes and
-database version. Compare it against `prisma/schema.prisma` and the initial migration
-before creating the target. Stop for missing tables, unexpected columns, failed
-migrations, provider types other than sftpgo, missing files or unsupported symlinks.
-Check external imageUrl values separately; external website images are not objects
-owned by this application's Storage and are preserved as URLs.
+Commands from the repository root (PowerShell; replace paths/environment):
 
-`database.json` contains password hashes and private records; it is secret backup
-material. `database.sha256` detects accidental corruption. Timestamps without time
-zones are transferred as raw PostgreSQL strings to avoid timezone shifts.
+    bun install --frozen-lockfile
+    bun run db:transfer inventory D:/secure-backups/portfolio/final
+    bun run db:transfer export D:/secure-backups/portfolio/final
+    bun run storage:migrate-s3 backup D:/secure-backups/portfolio/final
+    bun run prisma:deploy
+    bun run storage:provision
+    $env:CONFIRM_TARGET_IMPORT = 'true'
+    bun run db:transfer import D:/secure-backups/portfolio/final
+    $env:CONFIRM_STORAGE_WRITE = 'true'
+    bun run storage:migrate-s3 migrate D:/secure-backups/portfolio/final
+    bun run storage:migrate-s3 verify D:/secure-backups/portfolio/final
+    bun run db:transfer verify D:/secure-backups/portfolio/final
 
-File backup recursively lists SFTPGo's configured root, downloads every tracked file
-(also outside the root if explicitly referenced by the database), includes untracked
-files below the root, and writes file-inventory.json with duplicate-content groups.
-Tracked objects become `migrated/{id}/{safeFilename}`. Untracked objects become
-`unreferenced/{sha256(oldPath)}/{safeFilename}` and have no public metadata row.
-Files are streamed to disk and checksummed. No MIME or 10 MiB restriction is applied
-to historical files. Missing/oversized files must be reconciled, never skipped.
+Inspect inventory.json first: compare columns, enum types, indexes, constraints and
+migration history against the upstream baseline. Import refuses nonempty tables.
+Never restore a whole Postgres dump over Supabase's auth/storage/system schemas.
+The importer preserves all original IDs, hashes, array values and timestamps;
+additional target defaults are allowed during verification.
 
-Each snapshot is immutable: for final cutover take a NEW directory after freezing
-writes, so added/changed/deleted files cannot be missed by resuming an old manifest.
-Resume only the exact same frozen snapshot. Run one process per directory. A lock
-file prevents concurrent manifest writes; after a crash, verify no process remains
-before removing `files.lock` manually. Do not edit manifest entries to bypass errors.
+S3 backup paginates every object and preserves unreferenced objects too. Each entry
+records source key, target key, size, MIME, SHA-256, project references and status.
+Objects stream to disk through the native Node HTTP stream (avoiding a Bun web-stream
+adapter stall), then uploads/downloads are checksummed before database references
+change. Referenced project images become /api/files/{new-metadata-id}; original
+Project/User IDs and updatedAt remain unchanged. General/unreferenced files stay
+private. Unsupported external/local image sources stop migration rather than skip.
 
-## Prepare and restore staging
+Resume only the SAME frozen snapshot against its bound target. Source/S3 manifests
+are private backup material and must stay out of Git. A lock prevents concurrent
+writers; remove a stale lock only after confirming its process is no longer running.
+Never overwrite a conflicting existing remote object to force migration through.
 
-Configure staging TARGET_DATABASE_URL, DIRECT_URL and Supabase URL/key. Inspect
-source schema and history before applying migrations; never mark migrations applied
-without verifying the corresponding SQL already exists. Do not restore system schemas
-(`auth`, `storage`) or overwrite Supabase roles with a whole-database dump.
+## Actual backup and verification artifacts
 
-```powershell
-bun run prisma:deploy
-bun run storage:provision
-$env:CONFIRM_TARGET_IMPORT = 'true'
-bun run db:transfer import C:/secure-backups/portfolio/rehearsal
-$env:CONFIRM_STORAGE_WRITE = 'true'
-bun run storage:migrate migrate C:/secure-backups/portfolio/rehearsal
-bun run storage:migrate verify C:/secure-backups/portfolio/rehearsal
-bun run db:transfer verify C:/secure-backups/portfolio/rehearsal
-```
+The completed source snapshot is outside Git at:
+D:/.PHONGPHAT/portfolio/portfolio-migration-backups/portfolio-s3-cutover-20261120
 
-Provisioning needs RUNTIME_DATABASE_PASSWORD (at least 24 random characters), creates
-or updates the `portfolio_app` login, grants group membership and rejects excessive
-privileges. Use this login in DATABASE_URL. It creates the bucket idempotently but
-rejects public buckets or existing bucket MIME/size restrictions. Runtime enforces
-new-upload limits; Cloud project upload limits must accommodate ALL historical files.
-Bucket configuration does not raise the project's own upload limit.
+It contains database.json + SHA-256, inventory.json, s3-files.json, the 13 source
+object bytes, Redis analytics state, database/S3 verification reports, the migration
+summary and live HTTP smoke-test results. It was moved from C: after that drive ran
+out of space. This is a LOCAL backup; it is not an encrypted off-site backup service.
+Restrict filesystem ACLs and arrange off-site encryption/retention separately.
+The earlier code-only snapshot is the sibling portfolio-before-supabase-20261120
+folder. Local Git branch codex/supabase-before-upstream-merge also retains the
+pre-merge implementation. Do not confuse a code snapshot with a data backup.
 
-Import requires empty application tables and is atomic. Re-running an import into
-nonempty tables is refused. If an interrupted command committed, run verify before
-deciding whether to create a fresh target. File upload never overwrites existing
-objects: matching content resumes, conflicting content aborts. Metadata changes only
-after remote SHA-256 and size verification; updatedAt is preserved. The manifest is
-bound to one Supabase URL/bucket. Use separate backup directories for each target.
+## Deployment and rollback
 
-Verify all original rows byte-for-byte except intentional file key/provider changes,
-including IDs, hashes, arrays, timestamps and relations. Keep successful database and
-storage verification reports with the deployment record.
+The hosted Next.js deployment has NOT been changed or pushed by this work. Before
+production rollout, configure its secrets with the restricted runtime URL, correct
+migration URL, both unchanged auth secrets, private Storage secret and a Redis URL
+reachable FROM THAT HOST. The localhost Redis port used on this workstation depends
+on its SSH tunnel and is not a valid URL inside an unrelated deployment container.
 
-## Acceptance and production cutover
+For another source cutover, deploy the standalone maintenance guard to the OLD
+compatible release first, keep its old storage handlers, freeze all mutations and
+wait for requests to drain. Switch to the new deployment only after database/file
+verification succeeds. Test original login, dashboard, project CRUD, upload, private
+orphans, unpublish revocation and downloads. Run ops:check and review Supabase
+security/performance advisors, Data API settings, quotas and connection usage.
 
-Run `bun run lint`, `bun test tests` and `bun run build`. Tests include an embedded
-PostgreSQL engine (PGlite) for migration/RLS checks and HTTP mocks for transfers;
-they do not replace a real Supabase staging rehearsal, pooler test or advisor review.
+Before new target writes, rollback can return to the preserved source. After new
+writes, freeze and export the current target first; do not switch to stale source
+data. Restore into a fresh compatible Supabase project or reconcile deltas before
+any reverse move. These tools do not automatically overwrite a nonempty source.
+To restore a migrated operational backup, use database import plus
+storage:migrate restore-supabase. For an original S3 snapshot into a replacement
+project, copy the backup, deliberately clear its old target binding, run S3 migrate
+and both verification commands. Rehearse this on a separate project before relying
+on an RTO claim.
 
-On staging verify original admin login/session, expiration/logout, wrong credentials,
-non-admin rejection, Project/Certificate CRUD, sorting, featured and published state.
-Verify old file URLs, legacy imageUrl-only references, PDF/download filenames, shared
-references, and unpublish -> next request 404. Draft, GENERAL and unreferenced files
-must remain inaccessible to anonymous users. Anonymous callers must not be able to
-list/upload/delete Storage objects or read AdminUser directly. Test Data API-disabled
-Storage, RLS, malformed uploads, oversized uploads, DB/Storage failures and cleanup.
-Inspect browser bundles, JSON and logs for secrets. Run Supabase security/performance
-advisors and fix findings before production.
+## Ongoing operations
 
-1. Deploy ONLY the standalone `src/proxy.ts` maintenance guard to the SOURCE release,
-   retaining its old database and SFTPGo handlers. Do not deploy the new Storage
-   handlers until switching the environment to Supabase. Set
-   MAINTENANCE_READ_ONLY=true on every serving instance and pause cleanup/other writers.
-   Verify POST/PUT/DELETE and login return 503. Public GET remains available.
-2. Take a fresh final database+SFTP backup directory. Check it reflects the final
-   frozen snapshot. Do not use a rehearsal snapshot as the final data source.
-3. Repeat target migration/provision/import/file migration/verification on production,
-   using the production environment and a separate final directory. Both verification
-   commands must pass with no missing files/checksum mismatches.
-4. Switch Next.js to production DATABASE_URL and Supabase Storage secrets, preserving
-   AUTH_SECRET. Keep MAINTENANCE_READ_ONLY=true; deploy and verify public reads.
-5. Test admin reads using an existing signed session. Then enable writes in a controlled
-   smoke-test interval and verify login, CRUD, uploads, PDF and old URLs. Pause again
-   immediately if checks fail; preserve any writes made during this interval.
-6. Run `bun run ops:check` with runtime credentials. Record version, quotas, connection
-   usage, advisor findings and elapsed time. Open writes and monitor service errors.
+- Run bun run storage:cleanup every 5 minutes outside maintenance. Durable intents
+  are created BEFORE uploading; jobs wait one hour and check committed references
+  before deleting. Failed deletion retries back off up to 24 hours.
+- Run bun run ops:check with the runtime connection and alert on nonzero exit,
+  pending cleanup, missing RLS, public grants, a public bucket or legacy providers.
+- bun run ops:backup exports the database and ALL bucket objects to BACKUP_ROOT.
+  Set BACKUP_DATABASE_URL and use a fresh timestamped folder. For a consistent
+  snapshot, freeze ALL hosted writers and pause cleanup; setting the environment
+  variable only on the backup process is insufficient.
+- Arrange daily encrypted off-site database AND object backups, retention >=14 days,
+  and measured restore drills. Initial targets remain RPO 24h / RTO 4h. Supabase
+  database backups do not contain object bytes.
+- Hosting schedules, alert routes, off-site encryption, plan/quota selection, project
+  Data API disablement, advisors and a second-project restore drill remain operator
+  deployment tasks; they are not automatically configured by this repository.
 
-Do not cut over until data is complete, access controls pass and both DB+file restore
-have been rehearsed within the RTO target. Retain source database/SFTPGo and encrypted
-backups for at least 14 days after a successful cutover and restore rehearsal.
-
-## Rollback and restore
-
-Before any writes reach Supabase: switch deployment and environment to the preserved
-source system. Its data is still the final frozen snapshot. Restore writes only after
-the source's login/read/upload smoke tests pass.
-
-After Supabase has accepted writes: NEVER simply point back at the old source. Freeze
-all writers and cleanup, export the latest database and back up Storage first. Use
-the new backend-compatible deployment while investigating, or restore into a fresh
-Supabase replacement project. A full reverse move to SFTPGo requires reconciling
-new/deleted rows, mapping every new file back into SFTPGo and verifying the result;
-these tools intentionally do not overwrite a nonempty source automatically.
-
-For a database+Storage restore drill, copy the complete backup to a new external
-directory, provision a fresh target project and empty schema, import database.json,
-then restore files with the NEW target's Storage configuration:
-
-```powershell
-bun run prisma:deploy
-bun run storage:provision
-$env:CONFIRM_TARGET_IMPORT = 'true'
-bun run db:transfer import C:/secure-backups/portfolio/restore-drill
-$env:CONFIRM_STORAGE_WRITE = 'true'
-bun run storage:migrate restore-supabase C:/secure-backups/portfolio/restore-drill
-bun run storage:migrate verify C:/secure-backups/portfolio/restore-drill
-bun run db:transfer verify C:/secure-backups/portfolio/restore-drill
-```
-
-Operational backups preserve object keys, so no metadata rewrite is needed. When
-restoring an SFTPGo migration snapshot instead, use `migrate` to rewrite legacy keys;
-the original migration manifest's target binding requires a fresh copy with its
-target/bucket binding deliberately cleared for this NEW target before starting.
-Never reuse a directory that is still being written to. Do not restore _prisma_migrations
-from the source; target migration history is maintained by `prisma:deploy`.
-
-## Backups, cleanup and monitoring
-
-Database backups provided by Supabase do not include object bytes. Configure daily
-encrypted off-site backups of BOTH database and Storage, retention >=14 days, and
-quarterly restore drills. Initial targets: RPO <=24h and RTO <=4h, measured in a real
-drill rather than assumed. Schema/role configuration lives in Git; custom role
-passwords live in the secret manager and must be reprovisioned after restore.
-
-`bun run ops:backup` creates a timestamped directory under BACKUP_ROOT and calls the
-database export plus `backup-supabase`. Set BACKUP_DATABASE_URL to a separate backup
-reader. BACKUP_ROOT must be an off-site encrypted mount or copied to one by the backup
-system. Configure the hosting scheduler to set read-only on ALL web instances, wait
-for in-flight mutations to finish, pause cleanup, run this command with
-MAINTENANCE_READ_ONLY=true, verify `backup-complete.json`, then unfreeze in a finally
-step. Setting the variable only on the backup process does NOT freeze the website.
-No hosting scheduler or off-site credentials are configured by this repository.
-
-Schedule `bun run storage:cleanup` every 5 minutes outside maintenance. Upload intents
-become eligible after one hour; retries back off up to 24 hours. The worker checks
-for a committed UploadedFile reference before deleting. A reference protects the
-object even if a DB response was lost. Never delete all unattached files blindly;
-legacy/unreferenced backup objects are intentionally private and retained.
-
-Run `bun run ops:check` on a scheduler and alert on nonzero exit, pending cleanup,
-private-bucket violations or legacy providers. Also configure external alerts for
-API/Storage 5xx, latency, pool saturation, backup age >24h, storage and egress quota.
-Alert destinations, backup schedules, paid plan/PITR and quotas need actual Cloud and
-hosting access; they are not provisioned by merely running a local health check.
-
-## References
-
-- [Prisma and Supabase](https://supabase.com/docs/guides/database/prisma)
-- [Private buckets](https://supabase.com/docs/guides/storage/buckets/fundamentals)
-- [Storage access control](https://supabase.com/docs/guides/storage/security/access-control)
-- [API keys](https://supabase.com/docs/guides/getting-started/api-keys)
-- [Backup limitations](https://supabase.com/docs/guides/platform/backups)
-- [CLI v3 changes](https://supabase.com/changelog/supabase-cli-v3)
+References: https://supabase.com/docs/guides/database/prisma,
+https://supabase.com/docs/guides/platform/ssl-enforcement,
+https://supabase.com/docs/guides/storage/security/access-control,
+https://supabase.com/docs/guides/platform/backups

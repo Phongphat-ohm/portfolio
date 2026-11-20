@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { ensureAdmin, jsonError, parseOptionalDate, parseStringList, unauthorized } from "@/lib/api";
 
 export async function GET(request: NextRequest) {
-  const session = ensureAdmin(request);
+  const session = await ensureAdmin(request);
   const showAll = request.nextUrl.searchParams.get("all") === "true" && !!session;
   const certificates = await prisma.certificate.findMany({
     where: showAll ? undefined : { published: true },
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const maintenance = maintenanceResponse();
   if (maintenance) return maintenance;
-  if (!ensureAdmin(request)) {
+  if (!await ensureAdmin(request)) {
     return unauthorized();
   }
 

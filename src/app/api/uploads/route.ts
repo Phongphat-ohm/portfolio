@@ -10,7 +10,7 @@ export const runtime = "nodejs";
 export async function POST(request: NextRequest) {
   const maintenance = maintenanceResponse();
   if (maintenance) return maintenance;
-  if (!ensureAdmin(request)) {
+  if (!await ensureAdmin(request)) {
     return unauthorized();
   }
 
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
       await tx.storageCleanupJob.delete({ where: { id: intent.id } });
       return created;
     });
-    return NextResponse.json({ file: record }, { status: 201 });
+    return NextResponse.json({ file: record, url: record.url }, { status: 201 });
   } catch {
     // A lost DB response can hide a successful commit. The worker checks references
     // before deletion rather than blindly removing an object in this catch block.

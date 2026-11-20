@@ -2,8 +2,9 @@ import { Client, types } from "pg";
 import { createHash } from "node:crypto";
 import { mkdir, readFile, rename, realpath, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { databaseConnectionString } from "../../lib/db-connection";
 
-export const tables = ["AdminUser", "UploadedFile", "Certificate", "Project"] as const;
+export const tables = ["User", "AdminUser", "UploadedFile", "Certificate", "Project", "DailyVisit"] as const;
 export type Row = Record<string, unknown>;
 export type Snapshot = { version: 1; capturedAt: string; databaseVersion: string; schema: Row[]; indexes: Row[]; constraints: Row[]; migrations: Row[]; rows: Record<typeof tables[number], Row[]> };
 export const sha256 = (bytes: Uint8Array | string) => createHash("sha256").update(bytes).digest("hex");
@@ -18,7 +19,7 @@ export function required(name: string) {
 export async function connect(name: string) {
   // Preserve PostgreSQL timestamp-without-time-zone bytes across hosts/timezones.
   types.setTypeParser(1114, (value) => value);
-  const client = new Client({ connectionString: required(name), connectionTimeoutMillis: 10_000 });
+  const client = new Client({ connectionString: databaseConnectionString(required(name)), connectionTimeoutMillis: 10_000 });
   await client.connect();
   return client;
 }
@@ -48,6 +49,8 @@ export async function loadSnapshot(directory: string): Promise<Snapshot> {
   const digest = (await readFile(path.join(directory, "database.sha256"), "utf8")).trim();
   if (sha256(bytes) !== digest) throw new Error("Snapshot checksum mismatch.");
   const snapshot: Snapshot = JSON.parse(bytes.toString());
+  // Backwards compatible with pre-upstream snapshots containing four tables.
+  for (const table of tables) if (!(table in snapshot.rows)) snapshot.rows[table] = [];
   if (snapshot.version !== 1 || tables.some((table) => !Array.isArray(snapshot.rows[table]))) throw new Error("Invalid snapshot.");
   return snapshot;
 }

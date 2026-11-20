@@ -1,82 +1,78 @@
-# Supabase implementation verification — 2026-11-20
+# Verification — upstream merge and live Supabase migration, 2026-11-20
 
-## Completed in the workspace
+## Repository integration
 
-- Preserved the existing working tree in
-  `C:/Users/PHONGPHAT/.codex/backups/portfolio-before-supabase-20261120` before editing.
-  This is a CODE snapshot, not a backup of the live database or SFTPGo.
-- Added pinned Supabase SDK 2.119.2, server-only integration and lockfile updates.
-  Existing Next.js 16.2.6 and Prisma 7.8.0 were not upgraded.
-- Added a Prisma migration for the Supabase provider default, cleanup intents,
-  lookup indexes, restricted runtime grants, API-role revokes and RLS policies.
-  The migration was tested on an embedded PostgreSQL engine, not applied remotely.
-- Updated upload/file APIs, admin checks, file metadata projection, maintenance
-  guards, database pool settings and admin provisioning connection selection.
-- Added resumable source backups, database export/import/reconciliation, file
-  transfer/checksum/restore, bucket/role provisioning, cleanup, health and backup tools.
-- Documented source guard rollout, cutover, rollback, off-site backups and restoration.
+Fetched origin/main through ec882c3, incorporating its 12 newer commits on
+codex/supabase-upstream-integration. Pre-merge work is retained on
+codex/supabase-before-upstream-merge. No push or hosted website rollout was performed.
 
-## Executed checks
+The real upstream schema is User/Project/DailyVisit with bcrypt/JWT and S3, rather
+than the earlier four-table/SFTPGo draft. The merged schema preserves those upstream
+fields, adds file publication/compatibility support, and archives the incompatible
+draft initial migrations. Latest dashboard, categories, visitor charts and S3-source
+migration coexist with Supabase-only runtime uploads. Redis remains the current cache.
 
-| Check | Result |
-| --- | --- |
-| `bun install --frozen-lockfile` | Passed |
-| `bunx prisma generate` | Passed |
-| `bunx prisma validate` | Passed |
-| `bun run lint` | Passed |
-| `bun test tests` | 27 passed, 0 failed; 98 assertions |
-| `bun run build` | Passed; production Next.js build |
-| Browser static bundle scan for Supabase secret key identifiers | No matches |
-| `git diff --check` | Passed; existing Windows LF/CRLF notices only |
+## Live migration results
 
-API tests use mocked persistence/storage and real session hashing/signatures. SQL
-tests execute both migrations and role/RLS queries in PGlite. Database-transfer tests
-execute export/import/verification SQL using PGlite behind a simulated pg transport,
-including timestamp parsing, nonempty-target refusal and mismatch detection.
-Storage-tool tests execute the actual CLI/SDK against local HTTP fixtures, exercising
-tracked/untracked backups, resume, restore, remote/local checksum failures and
-refusal to overwrite conflicting objects. These are not live-cloud tests.
+| Item | Source | Verified target |
+| --- | ---: | ---: |
+| User accounts, original IDs/password hashes | 1 | 1 |
+| Projects, original IDs/fields/timestamps | 11 | 11 |
+| DailyVisit rows | 17 | 17 |
+| Historical visit total | 77 | 77 |
+| Storage objects, including two unreferenced objects | 13 | 13 |
+| Source object bytes | 3,495,918 | 3,495,918 |
+| Project image links rewritten to checked /api/files URLs | 11 | 11 |
 
-## Live preflight update — 2026-11-20
+Database comparison passed for every original column, allowing only the documented
+image rewrite and additive target columns. Every object passed local and remote
+SHA-256/size checks. The source tables were compared again after migration and were
+unchanged from the snapshot. Temporary smoke-test projects/files were removed.
 
-The user supplied source settings and configured the destination privately in .env.
-Only empty settings were filled: SOURCE_DATABASE_URL, the four SFTPGO settings,
-TARGET_DATABASE_URL (derived from the configured destination using the session
-pooler port), and a generated RUNTIME_DATABASE_PASSWORD. Existing nonempty values
-were preserved. No credential values were copied into this report or a memory file.
-The supplied AUTH_SECRET and admin settings matched the existing configuration.
+Source access used the existing SSH Host alias and local database/Redis forwarding;
+no source Docker services or source PostgreSQL records were modified. The source application
+service was observed at zero replicas. Redis analytics state was backed up; no
+unflushed daily visitor sets were present. Original AUTH_SECRET/JWT_SECRET and admin
+settings were preserved. Source credentials reside only in the private .env.
 
-| Live check | Result |
-| --- | --- |
-| Supabase target via session pooler | Connected; PostgreSQL 17.12 |
-| Target public schema | No application tables yet |
-| Supabase Storage secret | Authenticated successfully |
-| portfolio-files bucket | Confirmed empty; changed public -> private and verified |
-| Source database on localhost:15432 | ECONNREFUSED; service/tunnel needs to be opened |
-| Source SFTPGo endpoint | DNS ENOTFOUND using both HTTP and DNS checks |
-| Existing DIRECT_URL | Malformed: DATABASE_POOL_MAX text is attached to the database path; preserved as requested |
+Supabase PostgreSQL 17.12 is reached through verified TLS using its official CA.
+The restricted portfolio_app connection succeeded via the transaction pooler. All
+seven application tables have RLS and no anon/authenticated table grants. The private
+bucket contains migrated objects; runtime cleanup has no pending jobs.
 
-Supabase connector tools are not available in this session; the successful live
-checks used the configured PostgreSQL connection and Storage SDK directly. Target
-credentials alone do not grant Management API access for project-wide settings.
+## Executed validation
 
-No source records/files have been exported or imported, because the source database
-and file endpoint are unreachable. No target migrations, runtime-role provisioning,
-production deployment, Supabase advisor review, actual-data reconciliation or
-production restore drill has been performed. The source database and SFTPGo data
-have not been changed. Do not treat the bucket preparation as a completed migration.
+- Frozen Bun install, Prisma generate and schema validation passed.
+- TypeScript check and production Next.js build passed.
+- 28 automated tests passed (104 assertions), including the real merged migration in
+  PGlite, permissions, legacy snapshots, private files and resumable transfer fixtures.
+- 19 live HTTP smoke checks passed against the built Next.js app and real Supabase:
+  original bcrypt login; wrong password rejection; JWT-only auth/me; latest dashboard;
+  11 public projects with upstream/legacy DTO fields; visitor total 77; public image
+  streaming/no-store; anonymous orphan denial and admin orphan access; actual upload;
+  new file privacy; upstream create/delete; legacy edit; publish/unpublish revocation.
+- Database and S3 verification passed again after smoke-test cleanup.
+- ops:check passed with portfolio_app, seven RLS tables and zero pending cleanup.
 
-Before running Prisma against the configured target, either repair DIRECT_URL or
-temporarily supply the validated TARGET_DATABASE_URL as DIRECT_URL to that process.
-The current nonempty DATABASE_URL also uses the privileged migration login; changing
-it to the restricted runtime login requires provisioning and updating that existing
-value explicitly after the source can be inventoried and migrated.
+The live HTTP checks themselves passed; their first report write failed because C:
+was full. Only task-owned backups were relocated to D: and the report was saved there.
+No unrelated user files were deleted. The public CA was obtained over verified HTTPS
+and its fingerprint matched the pooler's presented trust chain; application TLS
+certificate/hostname validation was not disabled.
 
-Daily backup/cleanup/health schedules, off-site encryption/retention, alert routing,
-paid plan/quota selection and measured RPO/RTO still require real hosting/Cloud
-access. An automatic reverse migration into a nonempty SFTPGo/source database is
-not implemented; after new writes, preserve them and follow the runbook's fresh
-Supabase replacement/restore procedure instead of blindly switching to stale data.
+## Artifacts and remaining deployment work
 
-The code is ready for a connected staging rehearsal. It is not evidence that the
-production data has already been migrated. Follow `SUPABASE_RUNBOOK.md` before cutover.
+Backup/report location (outside Git):
+D:/.PHONGPHAT/portfolio/portfolio-migration-backups/portfolio-s3-cutover-20261120
+
+See SUPABASE_RUNBOOK.md for exact commands, permissions and rollback/restore steps.
+The .env changes to existing DATABASE_URL and malformed DIRECT_URL were made only
+AFTER the user explicitly approved those two changes. Other existing secrets were
+preserved. The source endpoint was updated when the user supplied the new S3-backed
+system settings. No passwords, tokens or connection-string values are in this report.
+
+A hosted deployment, Supabase advisor review/project-wide Data API settings, scheduled
+cleanup/backups, off-site encryption/retention, alert routing and a separate-project
+restore drill are not completed. Git changes and live migration do not configure
+those services automatically. RPO/RTO targets are not yet measured. The local Redis
+forward needs to be replaced by the hosting-reachable Redis URL for deployment.

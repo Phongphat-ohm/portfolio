@@ -21,10 +21,10 @@ mock.module("pg", () => ({
 
 const directory = await mkdtemp(path.join(tmpdir(), "portfolio-database-test-"));
 try {
-  const initial = await readFile("prisma/migrations/20260527163513_init/migration.sql", "utf8");
+  const initial = await readFile("docs/legacy-migrations/20260527163513_init.sql", "utf8");
   await source.exec(initial);
   await target.exec(initial);
-  await target.exec(await readFile("prisma/migrations/20261120000000_supabase_storage/migration.sql", "utf8"));
+  await target.exec(await readFile("docs/legacy-migrations/20261120000000_supabase_storage.sql", "utf8"));
   await source.query(`INSERT INTO "AdminUser" (id,username,"passwordHash","createdAt","updatedAt") VALUES ($1,$2,$3,$4,$4)`, ["old-admin", "original-username", "pbkdf2_sha256$120000$salt$unchanged", "2025-01-20 18:24:12.123"]);
   await source.query(`INSERT INTO "UploadedFile" (id,filename,key,"mimeType",size,url,provider,"updatedAt") VALUES ('old-file','file.pdf','/portfolio/file.pdf','application/pdf',123,'/api/files/old-file','sftpgo','2025-01-01')`);
   await source.query(`INSERT INTO "Project" (id,title,slug,summary,stack,"fileId","updatedAt") VALUES ('old-project','Title','slug','Summary',ARRAY['Next.js','Postgres'],'old-file','2025-01-01')`);

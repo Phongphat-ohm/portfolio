@@ -11,7 +11,7 @@ type RouteContext = {
 export async function PUT(request: NextRequest, context: RouteContext) {
   const maintenance = maintenanceResponse();
   if (maintenance) return maintenance;
-  if (!ensureAdmin(request)) {
+  if (!await ensureAdmin(request)) {
     return unauthorized();
   }
 
@@ -48,7 +48,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 export async function DELETE(request: NextRequest, context: RouteContext) {
   const maintenance = maintenanceResponse();
   if (maintenance) return maintenance;
-  if (!ensureAdmin(request)) {
+  if (!await ensureAdmin(request)) {
     return unauthorized();
   }
 

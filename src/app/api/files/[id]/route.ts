@@ -12,10 +12,10 @@ export async function GET(request: NextRequest, context: { params: Promise<{ id:
   const { id } = await context.params;
   const file = await prisma.uploadedFile.findUnique({ where: { id } });
   if (!file) return notFound();
-  if (!requireAdmin(request)) {
+  if (!await requireAdmin(request)) {
     const where = publicationReference(id);
     const [project, certificate] = await Promise.all([
-      prisma.project.findFirst({ where, select: { id: true } }),
+      prisma.project.findFirst({ where: publicationReference(id, "image"), select: { id: true } }),
       prisma.certificate.findFirst({ where, select: { id: true } }),
     ]);
     if (!project && !certificate) return notFound();

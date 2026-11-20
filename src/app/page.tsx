@@ -1,6 +1,8 @@
 "use client";
 
+import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import VisitorStats from "@/components/VisitorStats";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -55,7 +57,7 @@ export default function Home() {
               <div className="absolute -inset-x-8 bottom-2 h-3/5 rounded-full blur-3xl" style={{ background: "linear-gradient(135deg, color-mix(in srgb, var(--accent) 34%, transparent), rgba(52, 211, 153, 0.24), rgba(255, 214, 102, 0.2))" }} />
               <div className="absolute inset-x-6 bottom-4 h-24 rounded-full blur-2xl" style={{ background: "rgba(0, 0, 0, 0.18)" }} />
               <Image
-              src="/images/self-photo2.png"
+              src="/images/self-photo.webp"
               alt="Ohm Phongphat"
                 fill
                 priority
@@ -65,6 +67,8 @@ export default function Home() {
             </div>
           </motion.div>
         </section>
+        <VisitorStats />
+        <Footer />
       </main>
     </>
   );

@@ -1,4 +1,6 @@
 import crypto from "node:crypto";
+import bcrypt from "bcryptjs";
+import { verifyToken } from "@/lib/jwt";
 import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
@@ -36,6 +38,7 @@ export function hashPassword(password: string) {
 }
 
 export function verifyPassword(password: string, storedHash: string) {
+  if (/^\$2[aby]\$/.test(storedHash)) { try { return bcrypt.compareSync(password, storedHash); } catch { return false; } }
   const [algorithm, iterationsRaw, salt, originalHash] = storedHash.split("$");
 
   if (algorithm !== "pbkdf2_sha256" || !iterationsRaw || !salt || !originalHash) {
@@ -108,25 +111,29 @@ export function getRequestSession(request: NextRequest) {
   return readSessionToken(request.cookies.get(SESSION_COOKIE)?.value);
 }
 
-export function requireAdmin(request: NextRequest) {
+export async function requireAdmin(request: NextRequest) {
   const session = getRequestSession(request);
 
-  if (!session || session.role !== "admin") {
-    return null;
-  }
-
-  return session;
+  if (session?.role === "admin") return session;
+  const user = await userFromJwt(request.cookies.get("token")?.value);
+  return user ? { sub: user.id, username: user.username, role: user.role, exp: 0 } : null;
 }
 
 export async function validateLogin(username: string, password: string) {
+  const current = await prisma.user.findUnique({ where: { username } });
+  if (current) {
+    return current.role === "admin" && verifyPassword(password, current.passwordHash)
+      ? { id: current.id, username: current.username, role: current.role } : null;
+  }
   const admin = await prisma.adminUser.findFirst({
     where: {
       OR: [{ username }, { email: username }],
     },
   });
 
-  if (admin && verifyPassword(password, admin.passwordHash)) {
-    return { id: admin.id, username: admin.username, role: admin.role };
+  if (admin) {
+    return verifyPassword(password, admin.passwordHash)
+      ? { id: admin.id, username: admin.username, role: admin.role } : null;
   }
 
   if (
@@ -139,4 +146,18 @@ export async function validateLogin(username: string, password: string) {
   }
 
   return null;
+}
+
+async function userFromJwt(token?: string) {
+  if (!token) return null;
+  const payload = await verifyToken(token);
+  if (!payload || payload.role !== "admin") return null;
+  return prisma.user.findUnique({ where: { id: payload.userId }, select: { id: true, username: true, role: true } });
+}
+
+export async function getAuthUser() {
+  const jar = await cookies();
+  const session = readSessionToken(jar.get("portfolio_session")?.value);
+  if (session?.role === "admin") return { id: session.sub, username: session.username, role: "admin" as const };
+  return userFromJwt(jar.get("token")?.value);
 }

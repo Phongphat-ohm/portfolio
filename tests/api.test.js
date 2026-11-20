@@ -54,7 +54,7 @@ describe("private file delivery", () => {
   test("unattached/draft files are hidden and never fetched from Storage", async () => {
     expect((await GET(request("/api/files/file-1"), context)).status).toBe(404);
     expect(events).not.toContain("download");
-    expect(state.projectQuery).toEqual({ published: true, OR: [{ fileId: "file-1" }, { imageUrl: "/api/files/file-1" }] });
+    expect(state.projectQuery).toEqual({ published: true, OR: [{ fileId: "file-1" }, { image: "/api/files/file-1" }] });
   });
   test("a published reference permits reading; unpublishing revokes the next request", async () => {
     state.project = { id: "published-project" };
@@ -150,7 +150,7 @@ describe("uploads and maintenance", () => {
     expect(state.listQuery.where).toEqual({ published: true });
     expect(state.listQuery.include.file.select).not.toHaveProperty("key");
     await listProjects(request("/api/projects?all=true", { role: "admin" }));
-    expect(state.listQuery.where).toBeUndefined();
+    expect(state.listQuery.where).toEqual({});
   });
 });
 

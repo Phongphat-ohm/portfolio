@@ -1,13 +1,13 @@
 # Portfolio
 
 Next.js 16 portfolio with a Prisma-backed Supabase PostgreSQL database, private
-Supabase Storage, and the existing username/password admin authentication.
+Supabase Storage, and the upstream bcrypt/JWT admin authentication and Redis visitor analytics.
 
 ## Local setup
 
 Use Node.js 22+ and Bun. Copy .env.example to a private .env file and configure the
 runtime/migration database connections and server-only Supabase Storage secret.
-Never replace existing AUTH_SECRET during cutover.
+Preserve both AUTH_SECRET and JWT_SECRET during cutover. Postgres TLS uses the official bundled Supabase CA.
 
 ```powershell
 bun install --frozen-lockfile
@@ -40,6 +40,7 @@ for checks run in this workspace and remaining hosted prerequisites.
 
 - `bun run db:transfer inventory|export|import|verify <external-directory>`
 - `bun run storage:migrate backup-sftp|migrate|verify|backup-supabase|restore-supabase <external-directory>`
+- `bun run storage:migrate-s3 backup|migrate|verify <external-directory>`
 - `bun run storage:cleanup`
 - `bun run ops:check`
 - `bun run ops:backup`
