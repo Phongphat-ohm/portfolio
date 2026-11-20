@@ -27,15 +27,15 @@ const contacts = [
 export default function Page() {
   return (
     <>
-      <Navbar route_id={3} />
-      <main className="min-h-screen bg-base-100 text-base-content">
-        <section className="mx-auto flex min-h-screen w-full max-w-7xl flex-col justify-center px-4 pb-16 pt-28 sm:px-6 lg:px-8">
+      <Navbar route_id={4} />
+      <main className="site-page">
+        <section className="section-shell flex min-h-screen flex-col justify-center pb-16 pt-28 sm:pt-32">
           <div className="max-w-3xl">
-            <p className="text-sm font-semibold uppercase text-primary">Contact</p>
-            <h1 className="mt-3 text-4xl font-bold nunito sm:text-6xl">
+            <p className="eyebrow">Contact</p>
+            <h1 className="display-title mt-3">
               Let&apos;s build something useful together.
             </h1>
-            <p className="mt-5 text-base leading-8 text-base-content/70">
+            <p className="body-copy mt-5">
               Reach out for collaboration, portfolio feedback, or software
               development work.
             </p>
@@ -48,12 +48,12 @@ export default function Page() {
                 <Link
                   key={contact.label}
                   href={contact.href}
-                  className="card bg-base-200 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+                  className="apple-card transition hover:-translate-y-1"
                 >
-                  <div className="card-body">
-                    <Icon className="text-3xl text-primary" />
-                    <h2 className="card-title">{contact.label}</h2>
-                    <p className="text-sm text-base-content/70">{contact.value}</p>
+                  <div className="p-8">
+                    <Icon className="text-3xl" style={{ color: "var(--accent)" }} />
+                    <h2 className="mt-5 text-xl font-semibold">{contact.label}</h2>
+                    <p className="mt-2 text-sm" style={{ color: "var(--text-tertiary)" }}>{contact.value}</p>
                   </div>
                 </Link>
               );

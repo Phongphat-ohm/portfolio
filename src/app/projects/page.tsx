@@ -7,9 +7,9 @@ export default function Page() {
     return (
         <>
             <Navbar route_id={2} />
-            <main className="min-h-screen bg-base-100 text-base-content">
-            <div className="mx-auto w-full max-w-7xl px-4 pb-16 pt-28 sm:px-6 lg:px-8">
-                <div className="relative overflow-hidden rounded-box">
+            <main className="site-page">
+            <div className="section-shell pb-16 pt-28 sm:pt-32">
+                <div className="relative overflow-hidden border" style={{ borderColor: "var(--border-soft)" }}>
                     <motion.video
                         src="/vdo/bg.mp4"
                         autoPlay
@@ -22,9 +22,9 @@ export default function Page() {
                         className="aspect-[16/10] w-full object-cover sm:aspect-[21/9]"
                     >
                     </motion.video>
-                    <motion.h1 initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5, delay: 0.5 }} className="absolute left-0 top-0 flex h-full w-full items-center justify-center bg-black/35 p-5 text-center text-3xl font-bold text-white backdrop-blur-sm nunito sm:text-5xl lg:text-6xl">
+                    <motion.h1 initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5, delay: 0.5 }} className="absolute left-0 top-0 flex h-full w-full items-center justify-center bg-black/40 p-5 text-center text-3xl font-bold text-white backdrop-blur-[2px] nunito sm:text-5xl lg:text-6xl">
                         <span>
-                            This is my project <br /> in my <span className="text-primary">Life</span>
+                            This is my project <br /> in my <span style={{ color: "#58aefe" }}>Life</span>
                         </span>
                     </motion.h1>
                 </div>

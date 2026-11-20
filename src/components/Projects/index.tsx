@@ -55,7 +55,7 @@ export default function Project() {
         <>
             <div className="flex flex-col gap-2 sm:max-w-xs">
                 <label className="text-lg font-semibold">Select project category</label>
-                <select className="select select-bordered w-full">
+                <select className="apple-input">
                     <option value={"all"}>All Project</option>
                     {categories.map((val, index) => (
                         <option value={val.value} key={index}>{val.label}</option>

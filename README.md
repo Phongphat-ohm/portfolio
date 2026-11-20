@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio
 
-## Getting Started
+Next.js 16 portfolio with a Prisma-backed Supabase PostgreSQL database, private
+Supabase Storage, and the existing username/password admin authentication.
 
-First, run the development server:
+## Local setup
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Use Node.js 22+ and Bun. Copy .env.example to a private .env file and configure the
+runtime/migration database connections and server-only Supabase Storage secret.
+Never replace existing AUTH_SECRET during cutover.
+
+```powershell
+bun install --frozen-lockfile
+bun run prisma:generate
+bun run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Apply reviewed migrations with `bun run prisma:deploy` against DIRECT_URL, then
+provision Storage and the runtime database login with `bun run storage:provision`.
+Do not apply these changes to the old source database before exporting its data.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Validation
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```powershell
+bun run lint
+bun test tests
+bun run build
+```
 
-## Learn More
+Tests cover private file access, publication changes, existing sessions/hashes,
+upload failure handling, PostgreSQL RLS/permissions, and resumable file transfers.
+Live Supabase/pooler/backup verification requires a connected staging project.
 
-To learn more about Next.js, take a look at the following resources:
+## Migration and operations
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+See [the Supabase runbook](docs/SUPABASE_RUNBOOK.md) for source inventory, encrypted
+backups, schema reconciliation, staging/production migration, rollback, restore,
+cleanup scheduling and monitoring. See [verification status](docs/SUPABASE_VERIFICATION.md)
+for checks run in this workspace and remaining hosted prerequisites.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `bun run db:transfer inventory|export|import|verify <external-directory>`
+- `bun run storage:migrate backup-sftp|migrate|verify|backup-supabase|restore-supabase <external-directory>`
+- `bun run storage:cleanup`
+- `bun run ops:check`
+- `bun run ops:backup`
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Keep backups/manifests outside the repository. Production writes can be paused with
+MAINTENANCE_READ_ONLY=true while public reads continue. New uploads accept JPEG,
+PNG, WebP, GIF and PDF up to 10 MiB. Existing /api/files/{id} URLs are retained;
+public readers can access only files referenced by published content.

@@ -3,30 +3,52 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:deploy": "prisma migrate deploy",
+    "admin:create": "bun src/scripts/create-admin.ts",
+    "test": "bun test tests",
+    "db:transfer": "bun src/scripts/migration/database.ts",
+    "storage:provision": "bun src/scripts/migration/provision.ts",
+    "storage:migrate": "bun src/scripts/migration/files.ts",
+    "storage:cleanup": "bun src/scripts/storage-cleanup.ts",
+    "ops:check": "bun src/scripts/ops-check.ts",
+    "ops:backup": "bun src/scripts/backup.ts"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "@supabase/supabase-js": "2.119.2",
     "@tailwindcss/postcss": "^4.3.0",
     "@types/aos": "^3.0.7",
     "aos": "^2.3.4",
     "daisyui": "^5.5.19",
     "framer-motion": "^12.38.0",
     "next": "^16.2.6",
+    "pg": "^8.21.0",
+    "prisma": "^7.8.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-icons": "^5.6.0",
     "react-typed": "^2.0.12",
+    "server-only": "0.0.1",
     "typed.js": "^3.0.0"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "0.5.17",
     "@types/node": "^25.8.0",
+    "@types/pg": "8.20.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "postcss": "^8.5.14",
     "tailwindcss": "^4.3.0",
     "typescript": "^6.0.3"
+  },
+  "engines": {
+    "node": ">=22.0.0"
   }
 }

@@ -1,0 +1,105 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum FileOwnerType {
+  CERTIFICATE
+  PROJECT
+  GENERAL
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  email        String?  @unique
+  passwordHash String
+  name         String?
+  role         String   @default("admin")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model UploadedFile {
+  id        String        @id @default(cuid())
+  ownerType FileOwnerType @default(GENERAL)
+  ownerId   String?
+  filename  String
+  key       String        @unique
+  mimeType  String
+  size      Int
+  url       String
+  provider  String        @default("supabase")
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  certificates Certificate[]
+  projects     Project[]
+}
+
+model Certificate {
+  id           String        @id @default(cuid())
+  title        String
+  issuer       String
+  issueDate    DateTime?
+  credentialId String?
+  credentialUrl String?
+  description  String?
+  imageUrl     String?
+  fileId       String?
+  file         UploadedFile? @relation(fields: [fileId], references: [id], onDelete: SetNull)
+  tags         String[]      @default([])
+  published    Boolean      @default(true)
+  sortOrder    Int          @default(0)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@index([published, sortOrder])
+  @@index([fileId])
+  @@index([imageUrl, published])
+}
+
+model Project {
+  id          String        @id @default(cuid())
+  title       String
+  slug        String        @unique
+  summary     String
+  description String?
+  stack       String[]      @default([])
+  repoUrl     String?
+  liveUrl     String?
+  imageUrl    String?
+  fileId      String?
+  file        UploadedFile? @relation(fields: [fileId], references: [id], onDelete: SetNull)
+  startDate   DateTime?
+  endDate     DateTime?
+  featured    Boolean      @default(false)
+  published   Boolean      @default(true)
+  sortOrder   Int          @default(0)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([published, featured, sortOrder])
+  @@index([fileId])
+  @@index([imageUrl, published])
+}
+
+// Intent written BEFORE uploading. Workers never remove keys referenced by UploadedFile.
+model StorageCleanupJob {
+  id            String   @id @default(cuid())
+  key           String   @unique
+  createdAt     DateTime @default(now())
+  nextAttemptAt DateTime
+  attempts      Int      @default(0)
+
+  @@index([nextAttemptAt])
+}

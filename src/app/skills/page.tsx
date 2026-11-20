@@ -87,8 +87,8 @@ export default function Page() {
   return (
     <>
       <Navbar route_id={1} showScroll />
-      <main className="bg-base-100 text-base-content">
-        <section className="relative mx-auto flex min-h-screen w-full max-w-7xl items-center justify-center px-4 pb-20 pt-28 sm:px-6 lg:px-8">
+      <main className="site-page">
+        <section className="section-shell relative flex min-h-screen items-center justify-center pb-20 pt-28 sm:pt-32">
           <div className="grid w-full items-center gap-10 lg:grid-cols-2">
             <motion.img
               initial={{ opacity: 0, rotate: 8, scale: 0.96 }}
@@ -103,7 +103,7 @@ export default function Page() {
                 initial={{ x: -20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.5 }}
-                className="text-sm font-semibold uppercase text-primary"
+                className="eyebrow"
               >
                 Skills
               </motion.p>
@@ -111,7 +111,7 @@ export default function Page() {
                 initial={{ x: -20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="mt-3 text-3xl font-bold nunito sm:text-5xl"
+                className="section-title mt-3"
               >
                 Tools and technologies I use to build practical software.
               </motion.h1>
@@ -119,7 +119,7 @@ export default function Page() {
                 initial={{ x: 20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="mt-5 text-base leading-8 text-base-content/70"
+                className="body-copy mt-5"
               >
                 A compact overview of my editor, language, runtime, framework,
                 and library experience.
@@ -132,12 +132,12 @@ export default function Page() {
             animate={{ y: [0, -10, 0] }}
             transition={{ duration: 1.5, repeat: Infinity }}
           >
-            <FaComputerMouse className="rotate-180 text-2xl text-primary" />
+            <FaComputerMouse className="rotate-180 text-2xl" style={{ color: "var(--accent)" }} />
           </motion.span>
         </section>
 
-        <section className="bg-base-200">
-          <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <section style={{ background: "var(--surface-soft)" }}>
+          <div className="section-shell py-12 sm:py-14">
             <SectionTitle title="Program Skill" />
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               {programSkills.map((skill) => (
@@ -145,12 +145,12 @@ export default function Page() {
                   key={skill.name}
                   href={skill.href}
                   target="_blank"
-                  className="card h-full bg-base-100 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+                  className="apple-card h-full transition hover:-translate-y-1"
                 >
-                  <div className="card-body items-center text-center">
+                  <div className="flex h-full flex-col items-center p-8 text-center">
                     <img src={skill.image} alt={skill.name} className="h-24 w-24 object-contain" />
-                    <h2 className="card-title text-lg">{skill.name}</h2>
-                    <p className="text-sm leading-6 text-base-content/70">
+                    <h2 className="mt-5 text-lg font-semibold">{skill.name}</h2>
+                    <p className="mt-3 text-sm leading-6" style={{ color: "var(--text-tertiary)" }}>
                       {skill.description}
                     </p>
                   </div>
@@ -161,14 +161,14 @@ export default function Page() {
         </section>
 
         <section>
-          <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="section-shell py-12 sm:py-14">
             <SectionTitle title="Language Skills" />
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
               {languageSkills.map(([name, image]) => (
-                <div key={name} className="card bg-base-200 shadow-sm">
-                  <div className="card-body items-center justify-center p-5">
+                <div key={name} className="apple-panel">
+                  <div className="flex min-h-44 flex-col items-center justify-center p-5">
                     <img src={image} alt={`${name} icon`} className="h-20 w-20 object-contain" />
-                    <span className="text-center text-sm font-medium">{name}</span>
+                    <span className="mt-4 text-center text-sm font-medium">{name}</span>
                   </div>
                 </div>
               ))}
@@ -176,18 +176,18 @@ export default function Page() {
           </div>
         </section>
 
-        <section className="bg-base-200">
-          <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <section style={{ background: "var(--surface-soft)" }}>
+          <div className="section-shell py-12 sm:py-14">
             <SectionTitle title="Runtime Skills" />
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
               {runtimeSkills.map((skill) => (
-                <div key={skill.name} className="card bg-base-100 shadow-sm transition hover:shadow-xl">
-                  <div className="card-body">
+                <div key={skill.name} className="apple-card transition">
+                  <div className="p-8">
                     <div className="flex items-center gap-4">
                       <img src={skill.image} alt={skill.name} className="h-16 w-16 object-contain" />
                       <div>
                         <h2 className="font-semibold">{skill.name}</h2>
-                        <p className="mt-1 text-sm leading-6 text-base-content/70">
+                        <p className="mt-1 text-sm leading-6" style={{ color: "var(--text-tertiary)" }}>
                           {skill.description}
                         </p>
                       </div>
@@ -200,18 +200,18 @@ export default function Page() {
         </section>
 
         <section>
-          <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="section-shell py-12 sm:py-14">
             <SectionTitle title="Frameworks and Libraries" />
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
               {libraries.map(([name, image, imageClass]) => (
-                <div key={name} className="card bg-base-200 shadow-sm">
-                  <div className="card-body items-center justify-center p-5">
+                <div key={name} className="apple-panel">
+                  <div className="flex min-h-44 flex-col items-center justify-center p-5">
                     <img
                       src={image}
                       alt={`${name} icon`}
                       className={`h-20 w-20 rounded-lg object-contain transition hover:scale-105 ${imageClass}`}
                     />
-                    <span className="text-center text-sm font-medium">{name}</span>
+                    <span className="mt-4 text-center text-sm font-medium">{name}</span>
                   </div>
                 </div>
               ))}
@@ -226,7 +226,7 @@ export default function Page() {
 
 function SectionTitle({ title }: { title: string }) {
   return (
-    <h2 className="mb-5 text-xl font-bold text-base-content sm:text-2xl">
+    <h2 className="section-title mb-6">
       {title}
     </h2>
   );
