@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --turbo",
     "build": "next build",
+    "build:verify-no-env": "node tests/fixtures/build-without-secrets.cjs",
     "start": "next start",
     "lint": "tsc --noEmit",
     "postinstall": "prisma generate",

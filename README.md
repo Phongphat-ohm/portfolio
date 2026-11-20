@@ -27,6 +27,12 @@ bun test tests
 bun run build
 ```
 
+To verify builds do not require deployment credentials, run `bun run build:verify-no-env`.
+It builds with database/auth/Storage credentials blank without editing `.env`.
+Prisma initializes on first use; runtime requests still require a valid `DATABASE_URL`.
+On Vercel, configure it as a Secret for the deployment's Production/Preview environment
+and redeploy after saving. The Secret type does not prevent `process.env` access.
+
 Tests cover private file access, publication changes, existing sessions/hashes,
 upload failure handling, PostgreSQL RLS/permissions, and resumable file transfers.
 Live Supabase/pooler/backup verification requires a connected staging project.
