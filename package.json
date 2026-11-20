@@ -22,7 +22,6 @@
     "storage:migrate": "bun src/scripts/migration/files.ts",
     "storage:cleanup": "bun src/scripts/storage-cleanup.ts",
     "ops:check": "bun src/scripts/ops-check.ts",
-    "ops:backup": "bun src/scripts/backup.ts",
     "storage:migrate-s3": "bun src/scripts/migration/s3-files.ts"
   },
   "dependencies": {

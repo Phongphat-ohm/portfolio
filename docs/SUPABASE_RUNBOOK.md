@@ -144,16 +144,15 @@ on an RTO claim.
   before deleting. Failed deletion retries back off up to 24 hours.
 - Run bun run ops:check with the runtime connection and alert on nonzero exit,
   pending cleanup, missing RLS, public grants, a public bucket or legacy providers.
-- bun run ops:backup exports the database and ALL bucket objects to BACKUP_ROOT.
-  Set BACKUP_DATABASE_URL and use a fresh timestamped folder. For a consistent
-  snapshot, freeze ALL hosted writers and pause cleanup; setting the environment
-  variable only on the backup process is insufficient.
-- Arrange daily encrypted off-site database AND object backups, retention >=14 days,
-  and measured restore drills. Initial targets remain RPO 24h / RTO 4h. Supabase
-  database backups do not contain object bytes.
-- Hosting schedules, alert routes, off-site encryption, plan/quota selection, project
-  Data API disablement, advisors and a second-project restore drill remain operator
-  deployment tasks; they are not automatically configured by this repository.
+- The application backup runner and ops:backup command were removed at the user's
+  request. The normal .env contains only application/Prisma settings. One-off
+  transfer tools require a separately supplied migration environment; their
+  SOURCE_*, TARGET_*, RUNTIME_DATABASE_PASSWORD and CONFIRM_* values are not retained
+  in the application's .env or .env.example.
+- Existing migration artifacts outside the repository were retained. No historical
+  backup files, Supabase platform backups or restore points were deleted.
+- Hosting schedules, alert routes, plan/quota selection, project Data API disablement
+  and advisor review remain deployment tasks, not automatic repository services.
 
 References: https://supabase.com/docs/guides/database/prisma,
 https://supabase.com/docs/guides/platform/ssl-enforcement,

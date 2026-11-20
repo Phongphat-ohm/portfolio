@@ -33,7 +33,7 @@ Source access used the existing SSH Host alias and local database/Redis forwardi
 no source Docker services or source PostgreSQL records were modified. The source application
 service was observed at zero replicas. Redis analytics state was backed up; no
 unflushed daily visitor sets were present. Original AUTH_SECRET/JWT_SECRET and admin
-settings were preserved. Source credentials reside only in the private .env.
+settings were preserved. Source credentials were held only in the private .env during migration; they were removed during the subsequent environment cleanup.
 
 Supabase PostgreSQL 17.12 is reached through verified TLS using its official CA.
 The restricted portfolio_app connection succeeded via the transaction pooler. All
@@ -76,3 +76,11 @@ cleanup/backups, off-site encryption/retention, alert routing and a separate-pro
 restore drill are not completed. Git changes and live migration do not configure
 those services automatically. RPO/RTO targets are not yet measured. The local Redis
 forward needs to be replaced by the hosting-reachable Redis URL for deployment.
+
+## Environment cleanup requested after migration
+
+The normal .env and .env.example now retain only 12 application/Prisma settings.
+All source-service credentials, temporary provisioning/import flags and backup-only
+settings were removed without changing retained values. The backup runner and
+ops:backup command were removed. Existing backup artifacts outside Git were kept.
+One-off migration tools require a separately supplied environment when needed.

@@ -33,8 +33,8 @@ Live Supabase/pooler/backup verification requires a connected staging project.
 
 ## Migration and operations
 
-See [the Supabase runbook](docs/SUPABASE_RUNBOOK.md) for source inventory, encrypted
-backups, schema reconciliation, staging/production migration, rollback, restore,
+See [the Supabase runbook](docs/SUPABASE_RUNBOOK.md) for source inventory,
+schema reconciliation, staging/production migration, rollback, restore,
 cleanup scheduling and monitoring. See [verification status](docs/SUPABASE_VERIFICATION.md)
 for checks run in this workspace and remaining hosted prerequisites.
 
@@ -43,7 +43,6 @@ for checks run in this workspace and remaining hosted prerequisites.
 - `bun run storage:migrate-s3 backup|migrate|verify <external-directory>`
 - `bun run storage:cleanup`
 - `bun run ops:check`
-- `bun run ops:backup`
 
 Keep backups/manifests outside the repository. Production writes can be paused with
 MAINTENANCE_READ_ONLY=true while public reads continue. New uploads accept JPEG,
