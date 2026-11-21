@@ -1,10 +1,115 @@
 "use client";
+
 import { useRef, useState } from "react";
+import { FaImage, FaTrash } from "react-icons/fa6";
 import { imageSrc } from "@/lib/image";
-export default function ImageUpload({ value, onChange }: { value: string | null; onChange: (value: string | null) => void }) {
- const input = useRef<HTMLInputElement>(null); const [uploading,setUploading] = useState(false); const [error,setError] = useState("");
- async function upload(file?: File) { if (!file) return; setError(""); if (file.size > 10*1024*1024) { setError("ขนาดไฟล์ต้องไม่เกิน 10 MiB"); return; } setUploading(true);
- try { const form = new FormData(); form.set("file",file); form.set("ownerType","PROJECT"); const response = await fetch("/api/uploads",{ method:"POST", body:form }); const data = await response.json(); if (!response.ok) throw new Error(data.error || "อัปโหลดไม่สำเร็จ"); onChange(data.file.url); } catch(e) {setError(e instanceof Error ? e.message : "อัปโหลดไม่สำเร็จ");} finally {setUploading(false);} }
- const preview = imageSrc(value);
- return <div className="flex flex-col gap-2"><span>รูปโปรเจกต์</span>{preview && <img src={preview} alt="Preview" className="aspect-video w-full rounded-box object-cover"/>}<div className="flex gap-2"><button type="button" className="btn btn-outline" disabled={uploading} onClick={()=>input.current?.click()}>{uploading ? "กำลังอัปโหลด…" : "เลือกรูปภาพ (ไม่เกิน 10 MiB)"}</button>{value && <button type="button" className="btn btn-error" onClick={()=>onChange(null)}>นำรูปออก</button>}</div><input ref={input} type="file" accept="image/jpeg,image/png,image/webp,image/gif" className="hidden" onChange={e=>upload(e.target.files?.[0])}/>{error && <p role="alert" className="text-error">{error}</p>}</div>;
+
+const MAX_UPLOAD_SIZE = 10 * 1024 * 1024;
+const ALLOWED_TYPES = new Set([
+    "image/png",
+    "image/jpeg",
+    "image/webp",
+    "image/gif",
+]);
+
+interface ImageUploadProps {
+    value: string | null;
+    onChange: (value: string | null) => void;
+}
+
+export default function ImageUpload({ value, onChange }: ImageUploadProps) {
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [uploading, setUploading] = useState(false);
+    const [error, setError] = useState("");
+
+    const handleFile = async (file: File | undefined) => {
+        if (!file) return;
+        setError("");
+
+        if (!ALLOWED_TYPES.has(file.type)) {
+            setError("ประเภทไฟล์ต้องเป็น png/jpg/webp/gif เท่านั้น");
+            return;
+        }
+        if (file.size > MAX_UPLOAD_SIZE) {
+            setError("ขนาดไฟล์ต้องไม่เกิน 10 MiB");
+            return;
+        }
+
+        setUploading(true);
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("ownerType", "PROJECT");
+            const response = await fetch("/api/uploads", { method: "POST", body: formData });
+            const data = await response.json().catch(() => null);
+            if (!response.ok) throw new Error(data?.error ?? "อัปโหลดไฟล์ล้มเหลว");
+            const url = data?.file?.url ?? data?.url ?? null;
+
+            if (!url) {
+                setError("อัปโหลดไฟล์ล้มเหลว");
+                return;
+            }
+            onChange(url);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "เกิดข้อผิดพลาดระหว่างอัปโหลด");
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const handleRemove = () => {
+        setError("");
+        onChange(null);
+        if (inputRef.current) inputRef.current.value = "";
+    };
+
+    const preview = imageSrc(value);
+
+    return (
+        <div className="flex flex-col gap-2">
+            <span className="label-text mb-1">รูปโปรเจกต์</span>
+            {preview ? (
+                <div className="relative w-full overflow-hidden rounded-box border border-base-content/10">
+                    <img
+                        src={preview}
+                        alt="Preview"
+                        className="aspect-video w-full object-cover"
+                    />
+                    <button
+                        type="button"
+                        onClick={handleRemove}
+                        className="btn btn-error btn-sm absolute right-2 top-2"
+                    >
+                        <FaTrash /> ลบรูป
+                    </button>
+                </div>
+            ) : (
+                <button
+                    type="button"
+                    onClick={() => inputRef.current?.click()}
+                    disabled={uploading}
+                    className="flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-box border-2 border-dashed border-base-content/20 bg-base-100 text-base-content/60 transition-colors hover:border-primary hover:text-primary"
+                >
+                    {uploading ? (
+                        <span className="loading loading-spinner loading-lg" />
+                    ) : (
+                        <>
+                            <FaImage className="text-3xl" />
+                            <span className="text-sm font-medium">
+                                คลิกเพื่อเลือกรูปภาพ (PNG/JPG/WebP/GIF ไม่เกิน 10 MiB)
+                            </span>
+                        </>
+                    )}
+                </button>
+            )}
+            <input
+                ref={inputRef}
+                type="file"
+                accept="image/png,image/jpeg,image/webp,image/gif"
+                className="hidden"
+                onChange={(e) => handleFile(e.target.files?.[0])}
+            />
+            {error && <p className="text-sm text-error">{error}</p>}
+        </div>
+    );
 }

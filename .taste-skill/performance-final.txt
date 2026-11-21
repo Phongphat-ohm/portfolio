@@ -1,0 +1,54 @@
+
+perf /127.0.0.1:3003/ @ 1440px
+  PASS  host CPU load (before/after)               23/31 %        
+  PASS  total transfer                             722 KiB        html 6.6K  css 36.3K  js 223.3K  font 154.5K  img 234.4K  other 66.9K
+  WARN  requests                                   71             64 by load
+  PASS  images bytes                               234.4 KiB      8 files
+  PASS  largest image                              74.5 KiB       files/source-s3-82e72b75b914ef5b309f17978fe117aa
+  WARN  JS parsed                                  693.3 KiB      23 files, 223.3K gz
+  PASS  CSS                                        36.3 KiB       4 files
+  WARN  font families                              3              Hanken Grotesk, Hanken Grotesk Fallback, Newsreader
+  PASS  font files                                 3              154.5K
+  PASS  font bytes                                 154.5 KiB      
+  PASS  images without width+height                0              
+  PASS  below-fold images not lazy                 0              
+  WARN  oversized images (natural > 2.2x shown)    1              source-s3-82e72b75b914ef5b309f17978fe117aa 1852px for 564
+  PASS  WebGL live at load                         0              
+  PASS  WebGL live at bottom                       0              
+  PASS  WebGL peak live                            0              0 contexts made in all
+  PASS  long tasks                                 1              runs 3, 1..2, max 70ms
+  PASS  blocking time                              4 ms           runs 3, 2..24 ms; at load 4ms
+  PASS  FCP (CPU, relative)                        272 ms         runs 3, 208..296
+  PASS  LCP (CPU, relative)                        432 ms         runs 3, 208..460, img.portrait-image
+  PASS  layout shift                               0.000          runs 3, 0.000..0.002; at load 0.000
+  PASS  modules loaded, never mounted              0              
+  PASS  broken requests                            0              
+  PASS  page height                                4 screens      DOM 219 nodes
+
+perf /127.0.0.1:3003/ @ 390px
+  PASS  host CPU load (before/after)               23/31 %        
+  PASS  total transfer                             608.6 KiB      html 6.6K  css 36.3K  js 223.3K  font 154.5K  img 151K  other 36.9K
+  WARN  requests                                   69             45 by load
+  PASS  images bytes                               151 KiB        7 files
+  PASS  largest image                              49.2 KiB       language/csharp.png
+  WARN  JS parsed                                  693.3 KiB      23 files, 223.3K gz
+  PASS  CSS                                        36.3 KiB       4 files
+  WARN  font families                              3              Hanken Grotesk, Hanken Grotesk Fallback, Newsreader
+  PASS  font files                                 3              154.5K
+  PASS  font bytes                                 154.5 KiB      
+  PASS  images without width+height                0              
+  PASS  below-fold images not lazy                 0              
+  PASS  oversized images (natural > 2.2x shown)    0              
+  PASS  WebGL live at load                         0              
+  PASS  WebGL live at bottom                       0              
+  PASS  WebGL peak live                            0              0 contexts made in all
+  PASS  long tasks                                 1              runs 3, 1..1, max 80ms
+  PASS  blocking time                              7 ms           runs 3, 1..30 ms; at load 7ms
+  PASS  FCP (CPU, relative)                        288 ms         runs 3, 240..400
+  PASS  LCP (CPU, relative)                        420 ms         runs 3, 340..560, img.portrait-image
+  PASS  layout shift                               0.000          runs 3, 0.000..0.000; at load 0.000
+  PASS  modules loaded, never mounted              0              
+  PASS  broken requests                            0              
+  PASS  page height                                4.4 screens    DOM 227 nodes
+
+SUMMARY /127.0.0.1:3003/: 0 FAIL, 7 WARN  -> WARN

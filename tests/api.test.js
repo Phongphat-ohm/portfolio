@@ -28,6 +28,7 @@ const { GET } = await import("../src/app/api/files/[id]/route");
 const { POST } = await import("../src/app/api/uploads/route");
 const { GET: listProjects, POST: createProject } = await import("../src/app/api/projects/route");
 const { POST: login } = await import("../src/app/api/auth/login/route");
+const { GET: me } = await import("../src/app/api/auth/me/route");
 const { proxy } = await import("../src/proxy");
 const { fileResponseHeaders, detectFileType, MAX_UPLOAD_BYTES } = await import("../src/lib/file-policy");
 const context = { params: Promise.resolve({ id: "file-1" }) };
@@ -155,6 +156,12 @@ describe("uploads and maintenance", () => {
 });
 
 describe("compatible sessions and password hashes", () => {
+  test("unauthenticated me returns 401 so the upstream login page does not redirect", async () => {
+    const anonymous = await me(request("/api/auth/me"));
+    expect(anonymous.status).toBe(401);
+    expect(await anonymous.json()).toEqual({ user: null });
+    expect((await me(request("/api/auth/me", { role: "admin" }))).status).toBe(200);
+  });
   test("existing password algorithm round trips and rejects wrong password", () => {
     const hash = hashPassword("original-password");
     expect(verifyPassword("original-password", hash)).toBe(true);

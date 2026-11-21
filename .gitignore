@@ -52,3 +52,6 @@ next-env.d.ts
 !.env.example
 /migration-artifacts/
 /backups/
+
+# Local design-check browser profiles
+/.taste-skill/chrome-*/

@@ -1,0 +1,11 @@
+{
+ "page": null,
+ "url": "http://127.0.0.1:3003/",
+ "root": null,
+ "kind": "service",
+ "category": "developer portfolio",
+ "primary": "Explore projects",
+ "rounds": 3,
+ "start": "2026-11-20T16:15:07.725Z",
+ "by": "gate.mjs --start"
+}

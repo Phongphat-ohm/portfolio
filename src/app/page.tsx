@@ -1,75 +1,26 @@
-"use client";
-
+import FeaturedProjectVisual from "@/components/FeaturedProjectVisual";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import VisitorStats from "@/components/VisitorStats";
-import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-
+import { HiArrowDown, HiArrowRight, HiArrowUpRight } from "react-icons/hi2";
 export default function Home() {
-  return (
-    <>
-      <Navbar route_id={0} />
-      <main className="site-page home-gradient overflow-hidden">
-        <section className="section-shell grid min-h-screen items-center gap-12 pb-16 pt-28 sm:pt-32 lg:grid-cols-[1.05fr_0.95fr]">
-          <motion.div
-            initial={{ x: -20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="order-2 flex flex-col gap-6 text-center lg:order-1 lg:text-left"
-          >
-            <div className="flex flex-col gap-3">
-              <p className="body-copy">
-                Hello, It's me
-              </p>
-              <h1 className="display-title">
-                Ohm Phongphat
-              </h1>
-              <h2 className="text-2xl font-semibold leading-8 sm:text-[34px] sm:leading-[50px]" style={{ color: "var(--text-secondary)" }}>
-                And I'm a{" "}
-                <span style={{ color: "var(--accent)" }}>
-                  Full Stack Developer
-                </span>
-              </h2>
-            </div>
-            <p className="body-copy mx-auto max-w-2xl lg:mx-0">
-              Welcome to my portfolio website. This space introduces who I am,
-              the skills I use, and the projects I have built across frontend,
-              backend, and full stack work.
-            </p>
-            <div className="flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start">
-              <Link href={"/projects"} className="apple-button">
-                View Projects
-              </Link>
-              <Link href={"/skills"} className="apple-button-secondary">
-                Explore Skills
-              </Link>
-            </div>
-          </motion.div>
-          <motion.div
-            initial={{ y: -10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="order-1 mx-auto flex w-full max-w-xs justify-center sm:max-w-sm md:max-w-md lg:order-2 lg:max-w-lg"
-          >
-            <div className="hero-portrait relative aspect-[4/5] w-full overflow-visible px-6 pt-8">
-              <div className="absolute -inset-x-8 bottom-2 h-3/5 rounded-full blur-3xl" style={{ background: "linear-gradient(135deg, color-mix(in srgb, var(--accent) 34%, transparent), rgba(52, 211, 153, 0.24), rgba(255, 214, 102, 0.2))" }} />
-              <div className="absolute inset-x-6 bottom-4 h-24 rounded-full blur-2xl" style={{ background: "rgba(0, 0, 0, 0.18)" }} />
-              <Image
-              src="/images/self-photo.webp"
-              alt="Ohm Phongphat"
-                fill
-                priority
-                sizes="(min-width: 1024px) 38rem, (min-width: 640px) 24rem, 20rem"
-                className="object-contain object-bottom"
-              />
-            </div>
-          </motion.div>
-        </section>
-        <VisitorStats />
-        <Footer />
-      </main>
-    </>
-  );
+  return <><Navbar /><main id="main-content">
+    <section className="hero home-hero" data-enter><div className="wrap hero-grid">
+      <div className="hero-copy"><h1>Ohm Phongphat.<br /><em>Full stack</em><br />developer.</h1><p>I build with Next.js, JavaScript, and C#. From the interface to the backend, I follow the ideas that make me curious.</p>
+        <div className="hero-actions"><Link href="/projects" className="btn btn-primary">Explore projects <HiArrowUpRight aria-hidden="true" /></Link><Link href="/contact" className="text-link">Say hello <HiArrowRight aria-hidden="true" /></Link></div>
+        <div className="hero-note"><span>Next.js · JavaScript · C#</span><a href="#explore" aria-label="Scroll to explore"><HiArrowDown /></a></div>
+      </div>
+      <div className="portrait-frame" data-visual><span className="portrait-type" aria-hidden="true">hello.</span><Image src="/images/self-photo.webp" alt="Ohm Phongphat" width={720} height={960} priority sizes="(min-width: 1024px) 50vw, 100vw" className="portrait-image" /></div>
+    </div></section>
+    <section id="explore" className="explore-section screen-section"><div className="wrap">
+      <div className="section-heading"><h2>Projects, skills & experiments.</h2></div>
+      <div className="explore-layout">
+        <Link href="/projects" className="explore-feature"><div><h3>Things I’ve built.</h3><p>Web projects, desktop apps, and the work in between.</p></div><HiArrowUpRight className="feature-arrow" aria-hidden="true" /><FeaturedProjectVisual /></Link>
+        <div className="explore-links"><Link href="/skills"><div><h3>Skills & tools.</h3><p>The languages and tools I work with.</p><div className="icon-row" aria-hidden="true"><img src="/images/language/javascript.png" alt="" width={30} height={30} loading="lazy" /><img src="/images/library/next-js.png" alt="" width={30} height={30} loading="lazy" /><img src="/images/language/csharp.png" alt="" width={30} height={30} loading="lazy" /><img src="/images/database/postgresql.webp" alt="" width={30} height={30} loading="lazy" /></div></div><HiArrowUpRight /></Link><Link href="/app"><div><h3>Room to experiment.</h3><p>Small tools. Practical ideas. Try them out.</p><span className="text-link">Open the playground <HiArrowRight /></span></div><HiArrowUpRight /></Link><Link href="/certificates"><div><h3>Certificates & milestones.</h3><p>Certificates and milestones along the way.</p></div><HiArrowUpRight /></Link></div>
+      </div>
+    </div></section>
+    <section className="statement-section screen-section" data-moment="word-highlight"><div className="wrap"><h2 className="mo-wh__text">From the first interface to the last API call, I like making the pieces <strong>work together.</strong></h2><Link href="/skills" className="btn btn-primary">Explore my toolkit <HiArrowRight /></Link><VisitorStats /></div></section>
+  </main><Footer /></>;
 }

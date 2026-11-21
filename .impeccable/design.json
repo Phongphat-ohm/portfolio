@@ -1,0 +1,388 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-21T04:30:23.702626+00:00",
+  "title": "Design System: Ohm Phongphat",
+  "extensions": {
+    "colorMeta": {
+      "cobalt": {
+        "role": "primary",
+        "displayName": "Cobalt",
+        "tonalRamp": [
+          "oklch(15% 0.25 264)",
+          "oklch(26% 0.25 264)",
+          "oklch(38% 0.25 264)",
+          "oklch(49% 0.25 264)",
+          "oklch(61% 0.25 264)",
+          "oklch(72% 0.25 264)",
+          "oklch(84% 0.25 264)",
+          "oklch(95% 0.25 264)"
+        ]
+      },
+      "cobalt-hover": {
+        "role": "primary",
+        "displayName": "Cobalt Hover",
+        "tonalRamp": [
+          "oklch(15% 0.22 264)",
+          "oklch(26% 0.22 264)",
+          "oklch(38% 0.22 264)",
+          "oklch(49% 0.22 264)",
+          "oklch(61% 0.22 264)",
+          "oklch(72% 0.22 264)",
+          "oklch(84% 0.22 264)",
+          "oklch(95% 0.22 264)"
+        ]
+      },
+      "cool-paper": {
+        "role": "neutral",
+        "displayName": "Cool Paper",
+        "tonalRamp": [
+          "oklch(15% 0.008 260)",
+          "oklch(26% 0.008 260)",
+          "oklch(38% 0.008 260)",
+          "oklch(49% 0.008 260)",
+          "oklch(61% 0.008 260)",
+          "oklch(72% 0.008 260)",
+          "oklch(84% 0.008 260)",
+          "oklch(95% 0.008 260)"
+        ]
+      },
+      "cool-surface": {
+        "role": "neutral",
+        "displayName": "Cool Surface",
+        "tonalRamp": [
+          "oklch(15% 0.012 260)",
+          "oklch(26% 0.012 260)",
+          "oklch(38% 0.012 260)",
+          "oklch(49% 0.012 260)",
+          "oklch(61% 0.012 260)",
+          "oklch(72% 0.012 260)",
+          "oklch(84% 0.012 260)",
+          "oklch(95% 0.012 260)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "tonalRamp": [
+          "oklch(15% 0.008 260)",
+          "oklch(26% 0.008 260)",
+          "oklch(38% 0.008 260)",
+          "oklch(49% 0.008 260)",
+          "oklch(61% 0.008 260)",
+          "oklch(72% 0.008 260)",
+          "oklch(84% 0.008 260)",
+          "oklch(95% 0.008 260)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted",
+        "tonalRamp": [
+          "oklch(15% 0.025 260)",
+          "oklch(26% 0.025 260)",
+          "oklch(38% 0.025 260)",
+          "oklch(49% 0.025 260)",
+          "oklch(61% 0.025 260)",
+          "oklch(72% 0.025 260)",
+          "oklch(84% 0.025 260)",
+          "oklch(95% 0.025 260)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Line",
+        "tonalRamp": [
+          "oklch(15% 0.012 260)",
+          "oklch(26% 0.012 260)",
+          "oklch(38% 0.012 260)",
+          "oklch(49% 0.012 260)",
+          "oklch(61% 0.012 260)",
+          "oklch(72% 0.012 260)",
+          "oklch(84% 0.012 260)",
+          "oklch(95% 0.012 260)"
+        ]
+      },
+      "on-cobalt": {
+        "role": "neutral",
+        "displayName": "On Cobalt",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(26% 0 0)",
+          "oklch(38% 0 0)",
+          "oklch(49% 0 0)",
+          "oklch(61% 0 0)",
+          "oklch(72% 0 0)",
+          "oklch(84% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "field": {
+        "role": "neutral",
+        "displayName": "Field",
+        "tonalRamp": [
+          "oklch(15% 0.006 260)",
+          "oklch(26% 0.006 260)",
+          "oklch(38% 0.006 260)",
+          "oklch(49% 0.006 260)",
+          "oklch(61% 0.006 260)",
+          "oklch(72% 0.006 260)",
+          "oklch(84% 0.006 260)",
+          "oklch(95% 0.006 260)"
+        ]
+      },
+      "field-line": {
+        "role": "neutral",
+        "displayName": "Field Line",
+        "tonalRamp": [
+          "oklch(15% 0.02 260)",
+          "oklch(26% 0.02 260)",
+          "oklch(38% 0.02 260)",
+          "oklch(49% 0.02 260)",
+          "oklch(61% 0.02 260)",
+          "oklch(72% 0.02 260)",
+          "oklch(84% 0.02 260)",
+          "oklch(95% 0.02 260)"
+        ]
+      },
+      "success": {
+        "role": "semantic",
+        "displayName": "Success",
+        "tonalRamp": [
+          "oklch(15% 0.09 160)",
+          "oklch(26% 0.09 160)",
+          "oklch(38% 0.09 160)",
+          "oklch(49% 0.09 160)",
+          "oklch(61% 0.09 160)",
+          "oklch(72% 0.09 160)",
+          "oklch(84% 0.09 160)",
+          "oklch(95% 0.09 160)"
+        ]
+      },
+      "warning": {
+        "role": "semantic",
+        "displayName": "Warning",
+        "tonalRamp": [
+          "oklch(15% 0.09 75)",
+          "oklch(26% 0.09 75)",
+          "oklch(38% 0.09 75)",
+          "oklch(49% 0.09 75)",
+          "oklch(61% 0.09 75)",
+          "oklch(72% 0.09 75)",
+          "oklch(84% 0.09 75)",
+          "oklch(95% 0.09 75)"
+        ]
+      },
+      "error": {
+        "role": "semantic",
+        "displayName": "Error",
+        "tonalRamp": [
+          "oklch(15% 0.16 23)",
+          "oklch(26% 0.16 23)",
+          "oklch(38% 0.16 23)",
+          "oklch(49% 0.16 23)",
+          "oklch(61% 0.16 23)",
+          "oklch(72% 0.16 23)",
+          "oklch(84% 0.16 23)",
+          "oklch(95% 0.16 23)"
+        ]
+      },
+      "info": {
+        "role": "semantic",
+        "displayName": "Info",
+        "tonalRamp": [
+          "oklch(15% 0.14 260)",
+          "oklch(26% 0.14 260)",
+          "oklch(38% 0.14 260)",
+          "oklch(49% 0.14 260)",
+          "oklch(61% 0.14 260)",
+          "oklch(72% 0.14 260)",
+          "oklch(84% 0.14 260)",
+          "oklch(95% 0.14 260)"
+        ]
+      },
+      "body-secondary": {
+        "role": "neutral",
+        "displayName": "Body Secondary",
+        "tonalRamp": [
+          "oklch(15% 0.025 260)",
+          "oklch(26% 0.025 260)",
+          "oklch(38% 0.025 260)",
+          "oklch(49% 0.025 260)",
+          "oklch(61% 0.025 260)",
+          "oklch(72% 0.025 260)",
+          "oklch(84% 0.025 260)",
+          "oklch(95% 0.025 260)"
+        ]
+      },
+      "placeholder": {
+        "role": "neutral",
+        "displayName": "Placeholder",
+        "tonalRamp": [
+          "oklch(15% 0.03 260)",
+          "oklch(26% 0.03 260)",
+          "oklch(38% 0.03 260)",
+          "oklch(49% 0.03 260)",
+          "oklch(61% 0.03 260)",
+          "oklch(72% 0.03 260)",
+          "oklch(84% 0.03 260)",
+          "oklch(95% 0.03 260)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Personal display",
+        "purpose": "Home hero; 48px intermediate size below 900px and mobile clamp below 767px override the desktop clamp."
+      },
+      "headline": {
+        "displayName": "Section headline",
+        "purpose": "Major section introductions."
+      },
+      "body": {
+        "displayName": "Reading and controls",
+        "purpose": "Hanken Grotesk with Kanit fallback for Thai; Kanit preload is disabled."
+      },
+      "label": {
+        "displayName": "Functional label",
+        "purpose": "Navigation and form labels."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(.2,.8,.2,1)",
+        "purpose": "Shared hover and control transitions."
+      },
+      {
+        "name": "hero-enter",
+        "value": ".85s cubic-bezier(.22,1,.36,1)",
+        "purpose": "Heading clip reveal; disabled for reduced motion."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "animation: none !important; transition: none !important; scroll-behavior: auto",
+        "purpose": "Global reduced-motion override."
+      },
+      {
+        "name": "m-in",
+        "value": "150ms",
+        "purpose": "Linked motion.css interaction hover-in token."
+      },
+      {
+        "name": "m-out",
+        "value": "120ms",
+        "purpose": "Linked motion.css hover-out token."
+      },
+      {
+        "name": "m-press",
+        "value": "90ms",
+        "purpose": "Linked motion.css press token."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "narrow",
+        "value": "360px"
+      },
+      {
+        "name": "mobile",
+        "value": "767px"
+      },
+      {
+        "name": "compact",
+        "value": "900px"
+      },
+      {
+        "name": "tablet",
+        "value": "1100px"
+      },
+      {
+        "name": "wide",
+        "value": "1600px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "description": "Main action",
+      "html": "<button class=\"ds-primary\">Explore projects</button>",
+      "css": ".ds-primary{font-family:var(--font-text);font-size:15px;font-weight:500;background:var(--p-accent);color:var(--p-accent-ink);border:1px solid var(--p-accent);border-radius:8px;padding:12px 22px;min-height:48px;cursor:pointer;transition:background .16s var(--ease),transform .16s var(--ease);}.ds-primary:hover{transform:translateY(-1px);background:#1824bd;}.ds-primary:focus-visible{outline:2px solid var(--p-accent);outline-offset:4px;}.ds-primary:active{transform:translateY(1px) scale(.985);}.ds-primary:disabled{opacity:.5;cursor:not-allowed;transform:none;}@media(prefers-reduced-motion:reduce){[class^=\"ds-\"]{transition:none!important;animation:none!important}}",
+      "refersTo": "button-primary"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "description": "Secondary action",
+      "html": "<button class=\"ds-outline\">Explore projects</button>",
+      "css": ".ds-outline{font-family:var(--font-text);font-size:15px;font-weight:500;background:transparent;color:var(--p-ink);border:1px solid var(--line);border-radius:8px;padding:12px 22px;min-height:48px;cursor:pointer;transition:background .16s var(--ease),transform .16s var(--ease);}.ds-outline:hover{transform:translateY(-1px);}.ds-outline:focus-visible{outline:2px solid var(--p-accent);outline-offset:4px;}.ds-outline:active{transform:translateY(1px) scale(.985);}.ds-outline:disabled{opacity:.5;cursor:not-allowed;transform:none;}@media(prefers-reduced-motion:reduce){[class^=\"ds-\"]{transition:none!important;animation:none!important}}",
+      "refersTo": "button-outline"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "description": "Labeled form field with cobalt focus.",
+      "html": "<label class=\"ds-label\">Project title<input class=\"ds-input\" placeholder=\"Enter a title\" /></label>",
+      "css": ".ds-label{display:block;font:500 14px var(--font-text);color:var(--p-ink)}.ds-input{display:block;margin-top:10px;min-height:48px;padding:0 16px;background:#f8f9fb;color:var(--p-ink);border:1px solid #aeb6c4;border-radius:8px;font:400 15px var(--font-text)}.ds-input::placeholder{color:#657084;opacity:1}.ds-input:focus{border-color:var(--p-accent);outline:2px solid var(--p-accent);outline-offset:2px}.ds-input:hover{border-color:var(--p-muted)}@media(prefers-reduced-motion:reduce){[class^=\"ds-\"]{transition:none!important;animation:none!important}}",
+      "refersTo": "input"
+    },
+    {
+      "name": "Navigation",
+      "kind": "nav",
+      "description": "Current page is cobalt and underlined.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Example\"><a href=\"#home\">Home</a><a href=\"#projects\" aria-current=\"page\">Projects</a><a href=\"#skills\">Skills</a></nav>",
+      "css": ".ds-nav{display:flex;gap:28px;font:500 14px var(--font-text);color:var(--p-ink)}.ds-nav a{display:inline-flex;align-items:center;min-height:44px;position:relative;color:inherit;text-decoration:none}.ds-nav a::after{content:\"\";position:absolute;bottom:4px;left:0;right:0;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .18s var(--ease)}.ds-nav a:hover::after,.ds-nav a[aria-current]::after{transform:scaleX(1)}.ds-nav a[aria-current]{color:var(--p-accent)}.ds-nav a:focus-visible{outline:2px solid var(--p-accent);outline-offset:4px;}@media(prefers-reduced-motion:reduce){[class^=\"ds-\"]{transition:none!important;animation:none!important}}"
+    },
+    {
+      "name": "Technology Tag",
+      "kind": "chip",
+      "description": "Informational outlined metadata tag.",
+      "html": "<span class=\"ds-tag\">Next.js</span>",
+      "css": ".ds-tag{display:inline-block;padding:3px 10px;border:1px solid #c2c9d5;border-radius:5px;color:#4d5665;font:400 12px/1.6 var(--font-text)}@media(prefers-reduced-motion:reduce){[class^=\"ds-\"]{transition:none!important;animation:none!important}}"
+    },
+    {
+      "name": "Tool Panel",
+      "kind": "card",
+      "description": "Flat surface groups related tool inputs.",
+      "html": "<section class=\"ds-panel\"><h2>Output format</h2><p>Choose how to format the generated key.</p></section>",
+      "css": ".ds-panel{background:var(--p-surface);color:var(--p-ink);padding:32px;border-radius:16px;font:400 15px/1.6 var(--font-text)}.ds-panel h2{font-size:16px;font-weight:500;margin:0 0 12px}.ds-panel p{color:var(--p-muted);margin:0}@media(max-width:767px){.ds-panel{padding:20px}}@media(prefers-reduced-motion:reduce){[class^=\"ds-\"]{transition:none!important;animation:none!important}}",
+      "refersTo": "tool-panel"
+    },
+    {
+      "name": "Selected Choice",
+      "kind": "button",
+      "description": "Pressed format option in developer tools.",
+      "html": "<button class=\"ds-choice\" aria-pressed=\"true\">Hexadecimal</button>",
+      "css": ".ds-choice{min-height:48px;padding:10px;background:var(--p-bg);color:var(--p-ink);border:1px solid #bfc7d3;border-radius:8px;font:400 14px var(--font-text);cursor:pointer;transition:background .15s}.ds-choice[aria-pressed=\"true\"]{background:var(--p-accent);color:var(--p-accent-ink);border-color:var(--p-accent)}.ds-choice:hover{border-color:var(--p-accent)}.ds-choice:focus-visible{outline:2px solid var(--p-accent);outline-offset:4px;}@media(prefers-reduced-motion:reduce){[class^=\"ds-\"]{transition:none!important;animation:none!important}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "A personal portrait and exploratory directory",
+    "overview": "Cool grey surfaces and confident cobalt regions frame a personal showcase. Expressive Newsreader headlines introduce the owner; Hanken Grotesk keeps navigation, Thai-supported forms, and working utilities clear. Real portraits, actual project images, and full-colour technology logos provide the identity.",
+    "keyCharacteristics": [
+      "Flat tonal surfaces and open, divided lists.",
+      "Large serif headlines paired with practical sans-serif controls.",
+      "Soft image frames and a signature portrait arch.",
+      "Quiet interaction feedback with reduced-motion support."
+    ],
+    "rules": [
+      {
+        "name": "The Real Colour Rule",
+        "body": "Keep technology logos in their original colours; the site palette does not recolour brand assets.",
+        "section": "colors"
+      }
+    ],
+    "dos": [
+      "Do use the shared equal-edge container and responsive stacking rules.",
+      "Do retain real portraits, project imagery, full-colour logos, Thai support, and visible keyboard focus.",
+      "Do preserve truthful loading, empty, error, disabled, and success states."
+    ],
+    "donts": [
+      "Don't introduce frosted glass, decorative shadows, or gradients into the flat public system.",
+      "Don't replace Newsreader and Hanken Grotesk with the previous SF Pro identity.",
+      "Don't static-export the application; authenticated dashboards and existing API routes require the Next.js server runtime."
+    ]
+  }
+}

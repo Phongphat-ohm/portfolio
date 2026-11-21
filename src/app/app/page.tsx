@@ -1,39 +1,13 @@
 import Link from "next/link";
-
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import PageHeading from "@/components/PageHeading";
+import { HiArrowUpRight, HiOutlinePuzzlePiece } from "react-icons/hi2";
 const tools = [
-  {
-    href: "/app/dbcons",
-    image: "/icons/cloud-computing.png",
-    title: "Connection String Generator",
-  },
-  {
-    href: "/app/jwt-secret",
-    image: "/icons/key.png",
-    title: "JWT Secret Key Generator",
-  },
+ { href: "/app/dbcons", image: "/icons/cloud-computing.png", title: "Connection string generator", description: "Put your database connection details into the right format." },
+ { href: "/app/jwt-secret", image: "/icons/key.png", title: "JWT secret generator", description: "Generate a random key, choose a format, and copy it." },
+ { href: "/app/christmas_game", image: "", title: "Christmas adventure", description: "A small puzzle game. Take a break and try it out." },
 ];
-
 export default function AppPage() {
-  return (
-    <main data-theme="light" className="min-h-screen bg-blue-50 px-4 py-10 text-slate-900 sm:px-6">
-      <section className="mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-5xl flex-col items-center justify-center">
-        <div className="text-center">
-          <p className="text-sm font-semibold uppercase text-blue-600">Developer tools</p>
-          <h1 className="mt-3 text-3xl font-bold sm:text-5xl">
-            Helpful utilities for building software faster.
-          </h1>
-        </div>
-        <div className="mt-8 grid w-full gap-5 sm:grid-cols-2">
-          {tools.map((tool) => (
-            <Link key={tool.href} href={tool.href} className="card bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
-              <div className="card-body items-center text-center">
-                <img src={tool.image} alt={tool.title} className="h-32 w-32 object-contain sm:h-40 sm:w-40" />
-                <h2 className="card-title text-lg text-slate-700">{tool.title}</h2>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-    </main>
-  );
+  return <><Navbar /><main id="main-content" className="wrap page-content"><PageHeading title="Room to experiment.">A collection of small tools and side projects. Some help with the work. Some are just for fun.</PageHeading><div className="tool-list">{tools.map(tool => <Link href={tool.href} key={tool.href} className="tool-card">{tool.image ? <img src={tool.image} alt="" width={60} height={60} /> : <HiOutlinePuzzlePiece className="text-primary" size={44} />}<div><h2>{tool.title}</h2><p>{tool.description}</p></div><HiArrowUpRight aria-hidden="true" /></Link>)}</div></main><Footer /></>;
 }

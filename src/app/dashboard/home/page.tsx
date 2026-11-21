@@ -64,7 +64,7 @@ export default async function DashboardHome() {
     ];
 
     return (
-        <main className="min-h-screen bg-base-100 text-base-content">
+        <main id="main-content" className="admin-shell">
             <header className="sticky top-0 z-40 border-b border-base-content/10 bg-base-200/70 backdrop-blur-xl">
                 <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
                     <div className="flex items-center gap-3">
@@ -73,7 +73,7 @@ export default async function DashboardHome() {
                         </div>
                         <div>
                             <h1 className="text-lg font-bold nunito sm:text-xl">
-                                Portfolio. Admin
+                                Ohm · Workspace
                             </h1>
                             <p className="text-xs text-base-content/60">
                                 ระบบจัดการโปรเจกต์ส่วนตัว

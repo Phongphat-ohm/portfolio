@@ -1,8 +1,15 @@
 "use client";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import PageHeading from "@/components/PageHeading";
+import Link from "next/link";
+import { HiArrowLeft, HiArrowPath, HiCheck, HiOutlineClipboard } from "react-icons/hi2";
+
 
 import { useEffect, useState } from "react";
 
 export default function Home() {
+    const [copyMessage, setCopyMessage] = useState("");
     const [selectedDb, setSelectedDb] = useState("mysql");
     const [host, setHost] = useState("localhost");
     const [port, setPort] = useState("3306");
@@ -119,201 +126,23 @@ export default ${selectedDb === "mongodb"
         generateConnectionString();
     }, [selectedDb, host, port, database, username, password, ssl]);
 
-    const copyToClipboard = (text: string) => {
-        navigator.clipboard.writeText(text);
+    const copyToClipboard = async (text: string) => {
+        try { await navigator.clipboard.writeText(text); setCopyMessage("Copied to clipboard."); }
+        catch { setCopyMessage("Copy failed. Select the output and copy it manually."); }
     };
 
-    return (
-        <div className="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
-            <div className="container mx-auto px-4 py-8">
-                {/* Header */}
-                <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold text-gray-800 mb-2">
-                        Database Connection String Generator
-                    </h1>
-                    <p className="text-gray-600">
-                        สร้าง Connection String สำหรับฐานข้อมูลต่างๆ อย่างง่ายดาย
-                    </p>
-                </div>
-
-                <div className="max-w-4xl mx-auto">
-                    <div className="bg-white rounded-2xl shadow-xl p-8">
-                        {/* Database Type Selection */}
-                        <div className="mb-8">
-                            <label className="block text-sm font-semibold text-gray-700 mb-4">
-                                เลือกประเภทฐานข้อมูล
-                            </label>
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                {["mysql", "postgresql", "mongodb", "sqlserver"].map((db) => (
-                                    <button
-                                        key={db}
-                                        onClick={() => {
-                                            setSelectedDb(db);
-                                            setPort(dbConfigs[db].port);
-                                        }}
-                                        className={`db-btn ${db === "mysql"
-                                            ? "bg-orange-500 hover:bg-orange-600"
-                                            : db === "postgresql"
-                                                ? "bg-blue-500 hover:bg-blue-600"
-                                                : db === "mongodb"
-                                                    ? "bg-green-500 hover:bg-green-600"
-                                                    : "bg-red-500 hover:bg-red-600"
-                                            } ${selectedDb === db ? "ring-4 ring-opacity-50" : ""
-                                            } text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-105`}
-                                    >
-                                        {db.toUpperCase()}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Connection Form */}
-                        <div className="grid md:grid-cols-2 gap-8">
-                            <div className="space-y-6">
-                                <h3 className="text-xl font-semibold text-gray-800 mb-4">
-                                    ข้อมูลการเชื่อมต่อ
-                                </h3>
-
-                                {/* Host */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Host/Server
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={host}
-                                        onChange={(e) => setHost(e.target.value)}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg 
-                               text-gray-800 placeholder-gray-400
-                               focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="localhost"
-                                    />
-                                </div>
-
-                                {/* Port */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Port
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={port}
-                                        onChange={(e) => setPort(e.target.value)}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg 
-                               text-gray-800 placeholder-gray-400
-                               focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="3306"
-                                    />
-                                </div>
-
-                                {/* Database */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Database Name
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={database}
-                                        onChange={(e) => setDatabase(e.target.value)}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg 
-                               text-gray-800 placeholder-gray-400
-                               focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="myapp"
-                                    />
-                                </div>
-
-                                {/* Username */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Username
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={username}
-                                        onChange={(e) => setUsername(e.target.value)}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg 
-                               text-gray-800 placeholder-gray-400
-                               focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="root"
-                                    />
-                                </div>
-
-                                {/* Password */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Password
-                                    </label>
-                                    <input
-                                        type="password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg 
-                               text-gray-800 placeholder-gray-400
-                               focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="••••••••"
-                                    />
-                                </div>
-
-                                {/* SSL */}
-                                <div className="flex items-center">
-                                    <input
-                                        type="checkbox"
-                                        checked={ssl}
-                                        onChange={(e) => setSsl(e.target.checked)}
-                                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                                    />
-                                    <label className="ml-2 block text-sm text-gray-700">
-                                        Enable SSL
-                                    </label>
-                                </div>
-                            </div>
-
-                            {/* Generated Connection String */}
-                            <div className="space-y-6">
-                                <h3 className="text-xl font-semibold text-gray-800 mb-4">
-                                    Connection String
-                                </h3>
-
-                                <div className="bg-gray-50 rounded-lg p-6 border-2 border-dashed border-gray-300">
-                                    <div className="flex justify-between items-center mb-3">
-                                        <span className="text-sm font-medium text-gray-700">
-                                            Generated String:
-                                        </span>
-                                        <button
-                                            onClick={() => copyToClipboard(connectionString)}
-                                            className="bg-green-500 hover:bg-green-600 text-white text-sm px-3 py-1 rounded transition-all duration-200 cursor-pointer"
-                                        >
-                                            📋 Copy
-                                        </button>
-                                    </div>
-                                    <textarea
-                                        readOnly
-                                        value={connectionString}
-                                        className="w-full h-32 p-4 bg-white border border-gray-300 rounded-lg font-mono text-sm resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800"
-                                    />
-                                </div>
-
-                                <div className="bg-blue-50 rounded-lg p-6">
-                                    <h4 className="font-semibold text-gray-800 mb-3">
-                                        Environment Variables (.env)
-                                    </h4>
-                                    <textarea
-                                        readOnly
-                                        value={envVariables}
-                                        className="w-full h-24 p-4 bg-white border border-gray-300 rounded-lg font-mono text-sm resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800"
-                                    />
-                                    <button
-                                        onClick={() => copyToClipboard(envVariables)}
-                                        className="mt-2 bg-blue-500 hover:bg-blue-600 text-white text-sm px-3 py-1 rounded transition-all duration-200 cursor-pointer"
-                                    >
-                                        📋 Copy .env
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
+    return <><Navbar /><main id="main-content" className="wrap page-content tool-content">
+      <Link href="/app" className="breadcrumb"><HiArrowLeft /> Back to playground</Link>
+      <PageHeading title="Connection string generator.">สร้าง Connection String สำหรับฐานข้อมูล — choose a database and enter your connection details.</PageHeading>
+      <fieldset className="tool-fieldset"><legend>Database type / ประเภทฐานข้อมูล</legend><div className="choice-row">{["mysql","postgresql","mongodb","sqlserver"].map(db => <button key={db} className="choice" aria-pressed={selectedDb === db} onClick={() => { setSelectedDb(db); setPort(dbConfigs[db].port); }}>{db === "sqlserver" ? "SQL Server" : db === "postgresql" ? "PostgreSQL" : db === "mysql" ? "MySQL" : "MongoDB"}</button>)}</div></fieldset>
+      <div className="tool-panel tool-columns"><div className="form-stack">
+        <h2 className="text-xl font-medium">Connection details</h2>
+        {[{label:"Host / Server",value:host,set:setHost,type:"text"},{label:"Port",value:port,set:setPort,type:"text"},{label:"Database name",value:database,set:setDatabase,type:"text"},{label:"Username",value:username,set:setUsername,type:"text"},{label:"Password",value:password,set:setPassword,type:"password"}].map(field => <label key={field.label}><span className="field-label">{field.label}</span><input className="input w-full" type={field.type} value={field.value} onChange={event => field.set(event.target.value)} autoComplete="off" spellCheck={false} /></label>)}
+        <label className="flex items-center gap-3 min-h-11"><input className="checkbox checkbox-primary" type="checkbox" checked={ssl} onChange={event => setSsl(event.target.checked)} /> Enable SSL</label>
+      </div><div>
+        {[{title:"Connection string",value:connectionString},{title:"Environment variables",value:envVariables}].map(output => <div key={output.title} className="output-panel"><div className="output-toolbar"><h2>{output.title}</h2><button className="btn btn-outline btn-sm" onClick={() => copyToClipboard(output.value)} aria-label={`Copy ${output.title.toLowerCase()}`}><HiOutlineClipboard /> Copy</button></div><textarea readOnly className="code-output" value={output.value} aria-label={output.title} spellCheck={false} /></div>)}
+        <p className="copy-status mt-3" role="status">{copyMessage}</p>
+      </div></div>
+      <details className="mt-8"><summary className="min-h-11 cursor-pointer font-medium">View JavaScript connection example</summary><pre className="output-panel code-output mt-4">{nextjsExample}</pre></details>
+    </main><Footer /></>;
 }

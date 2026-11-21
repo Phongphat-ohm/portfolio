@@ -1,0 +1,25 @@
+{
+ "palettes": [
+  "cool-grey-cobalt"
+ ],
+ "types": [
+  "newsreader"
+ ],
+ "dealt": [
+  "newsreader",
+  "red-hat",
+  "instrument"
+ ],
+ "moments": [
+  {
+   "id": "photo-chapters",
+   "at": "2026-11-20T16:15:08.258Z",
+   "seed": "ded30ac4"
+  },
+  {
+   "id": "word-highlight",
+   "at": "2026-11-20T16:15:23.451Z",
+   "seed": "bad91bee"
+  }
+ ]
+}

@@ -1,0 +1,68 @@
+{
+ "url": "http://127.0.0.1:3000/",
+ "views": {
+  "desktop": {
+   "width": 1440,
+   "height": 900,
+   "navH": 57,
+   "scrollHeight": 1460,
+   "screens": 1.62,
+   "sections": [
+    {
+     "n": 1,
+     "tag": "section",
+     "id": "",
+     "cls": "mx-auto grid min-h-screen w-full max-w-7xl items-center gap-",
+     "top": 0,
+     "h": 900,
+     "hScreens": 1,
+     "offGrid": 0,
+     "tiles": [
+      {
+       "file": "desktop-sec-01-a.jpg",
+       "scrollY": 0
+      }
+     ]
+    },
+    {
+     "n": 2,
+     "tag": "section",
+     "id": "",
+     "cls": "mx-auto w-full max-w-7xl px-4 pb-24 sm:px-6 lg:px-8",
+     "top": 900,
+     "h": 311,
+     "hScreens": 0.35,
+     "offGrid": 311,
+     "tiles": [
+      {
+       "file": "desktop-sec-02-a.jpg",
+       "scrollY": 560,
+       "cutTop": 340,
+       "height": 311
+      }
+     ]
+    },
+    {
+     "n": 3,
+     "tag": "footer",
+     "id": "",
+     "cls": "relative mt-auto overflow-hidden bg-base-300",
+     "top": 1211,
+     "h": 249,
+     "hScreens": 0.28,
+     "offGrid": 249,
+     "tiles": [
+      {
+       "file": "desktop-sec-03-a.jpg",
+       "scrollY": 560,
+       "cutTop": 651,
+       "height": 249
+      }
+     ]
+    }
+   ],
+   "consoleErrors": []
+  }
+ },
+ "at": "2026-11-20T16:16:41.833Z"
+}

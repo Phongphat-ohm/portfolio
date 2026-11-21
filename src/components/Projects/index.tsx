@@ -10,7 +10,7 @@ export default function Project() {
             value: "web"
         },
         {
-            label: "Window App",
+            label: "Windows apps",
             value: "winapp"
         },
         {
@@ -54,18 +54,18 @@ export default function Project() {
 
     return (
         <>
-            <div className="flex flex-col gap-2 sm:max-w-xs">
-                <label className="text-lg font-semibold">Select project category</label>
+            <div className="project-toolbar"><div>
+                <label htmlFor="project-category" className="field-label">Explore by category</label>
                 <select
-                    className="select select-bordered w-full"
+                    id="project-category" className="select select-bordered w-full sm:min-w-72"
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
                 >
-                    <option value={"all"}>All Project</option>
+                    <option value={"all"}>All projects</option>
                     {categories.map((val, index) => (
                         <option value={val.value} key={index}>{val.label}</option>
                     ))}
-                </select>
+                </select></div><p className="text-sm text-base-content/70">A little bit of everything I build.</p>
             </div>
             <ProjectsList category={selectedCategory} />
         </>

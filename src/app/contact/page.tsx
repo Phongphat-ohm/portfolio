@@ -1,68 +1,14 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import Link from "next/link";
-import { FaGithub, FaLine, FaPhone } from "react-icons/fa6";
-import { MdEmail } from "react-icons/md";
-
+import PageHeading from "@/components/PageHeading";
+import Image from "next/image";
+import { FaGithub } from "react-icons/fa6";
+import { HiArrowUpRight, HiOutlineEnvelope, HiOutlinePhone } from "react-icons/hi2";
 const contacts = [
-  {
-    label: "GitHub",
-    value: "github.com",
-    href: "https://github.com/Phongphat-ohm",
-    icon: FaGithub,
-  },
-  {
-    label: "Email",
-    value: "Contact me by email",
-    href: "mailto:mr.phongphat.p@gmail.com",
-    icon: MdEmail,
-  },
-  {
-    label: "Phone",
-    value: "Connect on phone",
-    href: "tel:0654564610",
-    icon: FaPhone,
-  },
+  { label: "Email me", value: "For an idea, a collaboration, or just a hello.", href: "mailto:mr.phongphat.p@gmail.com", icon: HiOutlineEnvelope },
+  { label: "Find me on GitHub", value: "Phongphat-ohm", href: "https://github.com/Phongphat-ohm", icon: FaGithub },
+  { label: "Give me a call", value: "Let’s talk about what you have in mind.", href: "tel:0654564610", icon: HiOutlinePhone },
 ];
-
 export default function Page() {
-  return (
-    <>
-      <Navbar route_id={4} />
-      <main className="site-page">
-        <section className="section-shell flex min-h-screen flex-col justify-center pb-16 pt-28 sm:pt-32">
-          <div className="max-w-3xl">
-            <p className="eyebrow">Contact</p>
-            <h1 className="display-title mt-3">
-              Let&apos;s build something useful together.
-            </h1>
-            <p className="body-copy mt-5">
-              Reach out for collaboration, portfolio feedback, or software
-              development work.
-            </p>
-          </div>
-          <div className="mt-10 grid gap-4 md:grid-cols-3">
-            {contacts.map((contact) => {
-              const Icon = contact.icon;
-
-              return (
-                <Link
-                  key={contact.label}
-                  href={contact.href}
-                  className="apple-card transition hover:-translate-y-1"
-                >
-                  <div className="p-8">
-                    <Icon className="text-3xl" style={{ color: "var(--accent)" }} />
-                    <h2 className="mt-5 text-xl font-semibold">{contact.label}</h2>
-                    <p className="mt-2 text-sm" style={{ color: "var(--text-tertiary)" }}>{contact.value}</p>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
-        <Footer />
-      </main>
-    </>
-  );
+  return <><Navbar /><main id="main-content" className="wrap page-content"><PageHeading title="Let’s say hello.">Have something in mind? I’m happy to talk about software, exchange ideas, or hear what you’re working on.</PageHeading><div className="contact-layout"><div className="contact-list">{contacts.map(({ label, value, href, icon: Icon }) => <a href={href} key={label} className="contact-row" {...(href.startsWith("https") ? { target: "_blank", rel: "noopener noreferrer" } : {})}><Icon className="contact-icon" /><div><h2>{label}</h2><p>{value}</p></div><HiArrowUpRight aria-hidden="true" /></a>)}</div><div className="contact-portrait"><Image src="/images/self-photo2.png" alt="Phongphat Phesatcha" fill sizes="(min-width: 768px) 40vw, 100vw" className="object-contain object-bottom" /></div></div></main><Footer /></>;
 }

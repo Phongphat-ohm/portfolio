@@ -1,0 +1,35 @@
+
+1440x900  lines x 80 and 1360, nav 0px, one screen 900px
+  hero 900 tall; h1 82px/1.02, 3 lines, 559x251 at 80,120; lead -; buttons 1 x 50; visual -
+  section section.hero.home-hero section.hero.home-hero "Ohm Phongphat y     0  h   900  content 736
+  section #explore section.explore-section.screen-section "Projects, s y   900  h   900  content 645
+  section section.statement-section.screen-section section.statement-s y  1800  h   900  content 443
+  no findings
+
+1024x768  lines x 32 and 992, nav 0px, one screen 768px
+  hero 768 tall; h1 62px/1.02, 3 lines, 423x190 at 32,120; lead -; buttons 1 x 50; visual -
+  section section.hero.home-hero section.hero.home-hero "Ohm Phongphat y     0  h   768  content 604
+  section #explore section.explore-section.screen-section "Projects, s y   768  h   788  content 628
+  section section.statement-section.screen-section section.statement-s y  1556  h   768  content 317
+  no findings
+
+820x1180  lines x 32 and 788, nav 0px, one screen 1180px
+  hero 1180 tall; h1 48px/1.02, 3 lines, 327x147 at 32,398; lead -; buttons 1 x 50; visual -
+  section section.hero.home-hero section.hero.home-hero "Ohm Phongphat y     0  h  1180  content 650
+  section #explore section.explore-section.screen-section "Projects, s y  1180  h  1180  content 611
+  section section.statement-section.screen-section section.statement-s y  2360  h  1180  content 294
+  no findings
+
+768x1024  lines x 32 and 736, nav 0px, one screen 1024px
+  hero 1024 tall; h1 48px/1.02, 3 lines, 327x147 at 32,320; lead -; buttons 1 x 50; visual -
+  section section.hero.home-hero section.hero.home-hero "Ohm Phongphat y     0  h  1024  content 650
+  section #explore section.explore-section.screen-section "Projects, s y  1024  h  1024  content 611
+  section section.statement-section.screen-section section.statement-s y  2048  h  1024  content 341
+  no findings
+
+390x844  lines x 20 and 370, nav 0px, one screen 844px
+  hero 844 tall; h1 42px/1.02, 3 lines, 286x128 at 20,108; lead -; buttons 1 x 50; visual -
+  section section.hero.home-hero section.hero.home-hero "Ohm Phongphat y     0  h   844  content 687
+  section #explore section.explore-section.screen-section "Projects, s y   844  h  1134  content 989
+  section section.statement-section.screen-section section.statement-s y  1978  h   844  content 366
+  no findings

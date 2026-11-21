@@ -1,5 +1,6 @@
 "use client"
-import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
 type Level =
   | {
@@ -91,7 +92,7 @@ export default function ChristmasPuzzleAdventure() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-900 via-red-700 to-yellow-400 p-6 text-white">
+    <main id="main-content" className="game-shell"><Link href="/app" className="text-link mb-8">Back to playground</Link>
       <h1 className="text-5xl text-center font-bold mb-2 font-[cursive]">
         Christmas Adventure 🎄
       </h1>
@@ -110,6 +111,8 @@ export default function ChristmasPuzzleAdventure() {
         </h2>
         <p className="mb-6">{current.instruction}</p>
 
+        {current.type === "memory" && <MemoryRound items={current.items} onComplete={() => { setSuccess(true); setScore(s => s + 100); setFeedback("จับคู่ครบแล้ว! ยอดเยี่ยมมาก"); }} />}
+
         {current.type !== "memory" && (
           <>
             {"scrambled" in current && (
@@ -121,13 +124,14 @@ export default function ChristmasPuzzleAdventure() {
             <input
               value={answer}
               onChange={(e) => setAnswer(e.target.value.toUpperCase())}
-              placeholder="พิมพ์คำตอบ..."
-              className="w-full text-center text-xl p-4 border-2 rounded-xl mb-4"
+              aria-label="คำตอบ" placeholder="พิมพ์คำตอบ..."
+              className="input w-full text-center text-xl p-4 border-2 rounded-xl mb-4 placeholder:text-[#657084] placeholder:opacity-100"
             />
 
             <button
               onClick={checkAnswer}
-              className="w-full bg-red-600 hover:bg-red-700 text-white p-4 rounded-xl font-bold"
+              disabled={success}
+              className="w-full bg-red-600 hover:bg-red-700 text-white p-4 rounded-xl font-bold disabled:opacity-50"
             >
               ตรวจสอบคำตอบ
             </button>
@@ -135,7 +139,7 @@ export default function ChristmasPuzzleAdventure() {
         )}
 
         {feedback && (
-          <div
+          <div role="status"
             className={`mt-4 p-4 rounded-xl text-center font-bold ${
               success
                 ? "bg-green-100 text-green-700"
@@ -157,10 +161,10 @@ export default function ChristmasPuzzleAdventure() {
       </div>
 
       {win && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center">
+        <div role="dialog" aria-modal="true" aria-labelledby="win-title" className="fixed inset-0 bg-black/80 flex items-center justify-center p-5">
           <div className="bg-white text-gray-800 p-10 rounded-3xl text-center">
             <div className="text-7xl mb-4">🎁</div>
-            <h2 className="text-3xl font-bold text-red-600 mb-2">
+            <h2 id="win-title" className="text-3xl font-bold text-red-600 mb-2">
               สุขสันต์วันคริสต์มาส!
             </h2>
             <p className="mb-6">
@@ -175,6 +179,29 @@ export default function ChristmasPuzzleAdventure() {
           </div>
         </div>
       )}
-    </div>
+    </main>
   );
+}
+
+function MemoryRound({ items, onComplete }: { items: string[]; onComplete: () => void }) {
+  const [cards] = useState(() => [...items, ...items].map((value, id) => ({ value, id })).sort(() => Math.random() - 0.5));
+  const [flipped, setFlipped] = useState<number[]>([]);
+  const [matched, setMatched] = useState<number[]>([]);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
+  const reveal = (id: number) => {
+    if (flipped.length === 2 || flipped.includes(id) || matched.includes(id)) return;
+    const next = [...flipped, id];
+    setFlipped(next);
+    if (next.length !== 2) return;
+    if (cards.find(card => card.id === next[0])?.value === cards.find(card => card.id === next[1])?.value) {
+      const found = [...matched, ...next];
+      setMatched(found); setFlipped([]);
+      if (found.length === cards.length) onComplete();
+    } else timer.current = setTimeout(() => setFlipped([]), 800);
+  };
+  return <div className="grid grid-cols-3 gap-3 mb-6">{cards.map((card, index) => {
+    const visible = flipped.includes(card.id) || matched.includes(card.id);
+    return <button key={card.id} className="min-h-20 rounded-xl border border-emerald-900/20 bg-emerald-50 text-3xl disabled:opacity-60" onClick={() => reveal(card.id)} disabled={matched.includes(card.id)} aria-label={visible ? `${card.value}${matched.includes(card.id) ? " matched" : ""}` : `Reveal card ${index + 1}`} aria-pressed={visible}>{visible ? card.value : <span className="text-emerald-900 text-xl">?</span>}</button>;
+  })}</div>;
 }

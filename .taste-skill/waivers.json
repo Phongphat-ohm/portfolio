@@ -1,0 +1,5 @@
+[
+  {"check":"gaming-suspect","target":"src/lib/analytics.ts","reason":"Existing server-only visitor analytics excludes known bots from visit counts. This code is unchanged and does not branch the rendered UI or any checker's visual content."},
+  {"check":"phone-number","target":"div.wrap > div.footer-top > div.footer-links > a:nth-of-type(3)","reason":"This is the owner's pre-existing contact destination in the portfolio source. The requested redesign preserves existing contact functionality; the number was not invented."},
+  {"check":"effect-kind","target":"(the page)","reason":"The only scroll-linked visual is the supplied word-highlight moment, explicitly dealt for service pages by this skill. No shader, parallax, scroll-jacking, or unrelated service-page effect is used."}
+]

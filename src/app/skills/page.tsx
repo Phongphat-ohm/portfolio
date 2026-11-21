@@ -2,9 +2,9 @@
 
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import { motion } from "framer-motion";
+import PageHeading from "@/components/PageHeading";
 import Link from "next/link";
-import { FaComputerMouse } from "react-icons/fa6";
+
 
 const operatingSystemSkills = [
   ["Windows", "/images/os/windows.webp"],
@@ -101,192 +101,19 @@ const libraries = [
   ["Font Awesome", "/images/library/fontawesome.svg", "bg-white p-2"],
 ];
 
+const groups = [
+  { title: "Languages", description: "The building blocks behind the interface.", items: languageSkills.map(([name, image]) => ({ name, image, href: "", description: "" })) },
+  { title: "Frameworks & libraries", description: "Tools for putting the pieces together.", items: libraries.map(([name, image]) => ({ name, image, href: "", description: "" })) },
+  { title: "Editors & programs", description: "Where the work happens.", items: programSkills },
+  { title: "Runtimes", description: "What keeps the code running.", items: runtimeSkills.map(item => ({ ...item, href: "" })) },
+  { title: "Databases", description: "A home for structured data.", items: databaseSkill.map(item => ({ ...item, href: "" })) },
+  { title: "Operating systems", description: "The environments I work in.", items: operatingSystemSkills.map(([name, image]) => ({ name, image, href: "", description: "" })) },
+];
 export default function Page() {
-  return (
-    <>
-      <Navbar route_id={1} showScroll />
-      <main className="bg-base-100 text-base-content">
-        <section className="relative mx-auto flex min-h-screen w-full max-w-7xl items-center justify-center px-4 pb-20 pt-28 sm:px-6 lg:px-8">
-          <div className="grid w-full items-center gap-10 lg:grid-cols-2">
-            <motion.img
-              initial={{ opacity: 0, rotate: 8, scale: 0.96 }}
-              animate={{ opacity: 1, rotate: 0, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              src="/images/competence.png"
-              alt="Skill illustration"
-              className="mx-auto w-full max-w-xs sm:max-w-sm lg:max-w-md"
-            />
-            <div className="text-center lg:text-left">
-              <motion.p
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                className="text-sm font-semibold uppercase text-primary"
-              >
-                Skills
-              </motion.p>
-              <motion.h1
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="mt-3 text-3xl font-bold nunito sm:text-5xl"
-              >
-                Tools and technologies I use to build practical software.
-              </motion.h1>
-              <motion.p
-                initial={{ x: 20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="mt-5 text-base leading-8 text-base-content/70"
-              >
-                A compact overview of my editor, language, runtime, framework,
-                and library experience.
-              </motion.p>
-            </div>
-          </div>
-
-          <motion.span
-            className="absolute bottom-8 left-0 flex w-full justify-center text-lg"
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-          >
-            <FaComputerMouse className="rotate-180 text-2xl text-primary" />
-          </motion.span>
-        </section>
-
-        <section className="bg-base-200">
-          <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-            <SectionTitle title="Program Skill" />
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              {programSkills.map((skill) => (
-                <Link
-                  key={skill.name}
-                  href={skill.href}
-                  target="_blank"
-                  className="card h-full bg-base-100 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
-                >
-                  <div className="card-body items-center text-center">
-                    <img src={skill.image} alt={skill.name} className="h-24 w-24 object-contain" />
-                    <h2 className="card-title text-lg">{skill.name}</h2>
-                    <p className="text-sm leading-6 text-base-content/70">
-                      {skill.description}
-                    </p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-            <SectionTitle title="Operating System Skills" />
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
-              {operatingSystemSkills.map(([name, image]) => (
-                <div key={name} className="card bg-base-200 shadow-sm">
-                  <div className="card-body items-center justify-center p-5">
-                    <img src={image} alt={`${name} icon`} className="h-20 w-20 object-contain" />
-                    <span className="text-center text-sm font-medium">{name}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="bg-base-200">
-          <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-            <SectionTitle title="Language Skills" />
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
-              {languageSkills.map(([name, image]) => (
-                <div key={name} className="card bg-base-100 shadow-sm">
-                  <div className="card-body items-center justify-center p-5">
-                    <img src={image} alt={`${name} icon`} className="h-20 w-20 object-contain" />
-                    <span className="text-center text-sm font-medium">{name}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-            <SectionTitle title="Database Skills" />
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-              {databaseSkill.map((skill) => (
-                <div key={skill.name}>
-                  <div className="card bg-base-200 shadow-sm transition hover:shadow-xl">
-                    <div className="card-body">
-                      <div className="flex flex-col items-center gap-4">
-                        <img src={skill.image} alt={skill.name} className="size-28 object-contain" />
-                        <div>
-                          <h2 className="font-semibold">{skill.name}</h2>
-                          <p className="mt-1 text-sm leading-6 text-base-content/70">
-                            {skill.description}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="bg-base-200">
-          <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-            <SectionTitle title="Runtime Skills" />
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-              {runtimeSkills.map((skill) => (
-                <div key={skill.name} className="card bg-base-100 shadow-sm transition hover:shadow-xl">
-                  <div className="card-body">
-                    <div className="flex items-center gap-4">
-                      <img src={skill.image} alt={skill.name} className="h-16 w-16 object-contain" />
-                      <div>
-                        <h2 className="font-semibold">{skill.name}</h2>
-                        <p className="mt-1 text-sm leading-6 text-base-content/70">
-                          {skill.description}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-            <SectionTitle title="Frameworks and Libraries" />
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-              {libraries.map(([name, image, imageClass]) => (
-                <div key={name} className="card bg-base-200 shadow-sm">
-                  <div className="card-body items-center justify-center p-5">
-                    <img
-                      src={image}
-                      alt={`${name} icon`}
-                      className={`h-20 w-20 rounded-lg object-contain transition hover:scale-105 ${imageClass}`}
-                    />
-                    <span className="text-center text-sm font-medium">{name}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-        <Footer />
-      </main>
-    </>
-  );
-}
-
-function SectionTitle({ title }: { title: string }) {
-  return (
-    <h2 className="mb-5 text-xl font-bold text-base-content sm:text-2xl">
-      {title}
-    </h2>
-  );
+  return <><Navbar /><main id="main-content" className="wrap page-content"><PageHeading title="My working toolkit.">From frontend interfaces to backend services. These are the languages, platforms, and tools I use along the way.</PageHeading>
+    {groups.map(group => <section key={group.title} className="skill-section"><div><h2>{group.title}</h2><p>{group.description}</p></div><div className="skill-grid">{group.items.map(item => {
+      const content = <><img src={item.image} alt="" loading="lazy" width={36} height={36} /><div><h3>{item.name}</h3>{item.description && <p>{item.description}</p>}</div></>;
+      return item.href ? <Link key={item.name} className="skill-item" href={item.href} target="_blank" rel="noopener noreferrer">{content}</Link> : <div className="skill-item" key={item.name}>{content}</div>;
+    })}</div></section>)}
+  </main><Footer /></>;
 }
